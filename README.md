@@ -34,9 +34,14 @@ MAJOR PROJECT/
 
 This project is under development. Features that depend on database setup, email configuration, external services, or other environment-specific settings may require additional configuration.
 
-## Contributors
+## Contributors 
 
-NARI-KAVACH development team.
+ - Aditya Mukherjee - 23051156
+ - Anushka Anand - 23052225
+ - Snehangshu Sarkar - 23052600
+ - Srishti Jha - 23052755
+ 
+ 
 =======
 
 
