@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # NARI-KAVACH — AI-Powered Women's Safety System
 
 ## Overview
@@ -141,3 +142,6 @@ This project is under development. Features that depend on database setup, email
 ## Contributors
 
 NARI-KAVACH development team.
+=======
+
+>>>>>>> origin/main
