@@ -1,0 +1,22 @@
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Frontend
+node_modules/
+dist/
+
+# Logs and local files
+*.log
+.DS_Store
+
+# Local email testing
+Backend/test_smpt.py

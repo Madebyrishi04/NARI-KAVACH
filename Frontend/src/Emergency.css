@@ -1,0 +1,201 @@
+
+.emergency-page {
+  color: #f4f5fb;
+  width: 100%;
+}
+
+.emergency-heading {
+  margin-bottom: 30px;
+}
+
+.emergency-heading h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+}
+
+.emergency-heading p,
+.official-emergency p {
+  color: #91a0bc;
+  line-height: 1.6;
+}
+
+.emergency-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 28px;
+}
+
+.emergency-card {
+  position: relative;
+  min-height: 320px;
+  padding: 30px;
+  border: 1px solid #293143;
+  border-radius: 20px;
+  background: #151b26;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.sos-button {
+  width: 155px;
+  height: 155px;
+  border-radius: 50%;
+  border: 1px solid #a85c43;
+  background: radial-gradient(circle, #422b2c, #261f29);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 0 28px #151b26, 0 0 0 30px #573a38,
+    0 0 0 53px #151b26, 0 0 0 55px #382c30;
+  margin: 40px 0 65px;
+}
+
+.sos-symbol,
+.warning-symbol {
+  color: #ff824c;
+  font-size: 30px;
+}
+
+.sos-button strong {
+  font-size: 21px;
+}
+
+.sos-button small {
+  color: #c1b9c4;
+  font-family: monospace;
+}
+
+.sos-instruction {
+  color: #8796b2;
+  margin-top: 20px;
+}
+
+.confirmation-panel {
+  width: min(100%, 410px);
+  box-sizing: border-box;
+  margin-top: 20px;
+  padding: 24px;
+  border: 1px solid #343b51;
+  border-radius: 16px;
+  background: #202637;
+}
+
+.confirmation-panel h3 {
+  margin: 12px 0;
+}
+
+.confirmation-panel p {
+  color: #aab6ce;
+  line-height: 1.6;
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.confirmation-actions button,
+.resolve-button,
+.resolved-alert button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #fff;
+  border: 1px solid #343b51;
+  background: transparent;
+}
+
+.confirmation-actions .confirm-button {
+  background: #ed644f;
+  border-color: #ed644f;
+}
+
+.critical-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 30px;
+  background: #3a252e;
+  color: #ff7777;
+  font-weight: 700;
+}
+
+.critical-badge span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff555d;
+}
+
+.active-alert h2,
+.resolved-alert h2 {
+  margin: 25px 0 10px;
+}
+
+.active-alert p,
+.resolved-alert p {
+  color: #aab6ce;
+}
+
+.resolve-button {
+  margin-top: 20px;
+  width: auto;
+  min-width: 200px;
+}
+
+.official-emergency {
+  align-items: stretch;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.official-emergency h2 {
+  margin: 8px 0;
+  font-size: 26px;
+}
+
+.call-112-button {
+  display: block;
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  background: #5965f5;
+  color: white;
+  font-weight: 600;
+}
+
+.emergency-success {
+  color: #6ee7a0;
+}
+
+.emergency-error {
+  color: #ff8585;
+}
+
+@media (max-width: 900px) {
+  .emergency-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .emergency-card {
+    padding: 20px;
+  }
+
+  .confirmation-actions {
+    flex-direction: column;
+  }
+}
