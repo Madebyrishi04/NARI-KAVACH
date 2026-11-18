@@ -1,0 +1,19 @@
+name,type,latitude,longitude,has_women_helpdesk
+Parliament Street Police Station,Police_Station,28.6256,77.2144,True
+Connaught Place Police Station,Police_Station,28.6328,77.2197,True
+Hauz Khas Police Station,Police_Station,28.5494,77.2001,True
+Karol Bagh Police Station,Police_Station,28.6514,77.1907,True
+Kashmere Gate Police Station,Police_Station,28.6675,77.2285,True
+Saket Police Station,Police_Station,28.5244,77.2066,True
+Dwarka South Police Station,Police_Station,28.5729,77.0691,True
+Rohini North Police Station,Police_Station,28.7166,77.1147,True
+Noida Sector 20 Police Station,Police_Station,28.5783,77.3328,True
+Gurugram DLF Phase 1 Police Station,Police_Station,28.4732,77.0982,True
+AIIMS Trauma Centre,Hospital_Emergency,28.5672,77.21,True
+Safdarjung Hospital Emergency,Hospital_Emergency,28.5694,77.2078,True
+Ram Manohar Lohia Hospital,Hospital_Emergency,28.6247,77.2014,True
+Lok Nayak Hospital (LNJP),Hospital_Emergency,28.6385,77.2405,False
+Max Super Speciality Hospital Saket,Hospital_Emergency,28.5276,77.214,True
+Fortis Escorts Heart Institute Okhla,Hospital_Emergency,28.5601,77.2797,False
+Sir Ganga Ram Hospital,Hospital_Emergency,28.6387,77.1895,False
+Medanta The Medicity Gurugram,Hospital_Emergency,28.4395,77.0425,True

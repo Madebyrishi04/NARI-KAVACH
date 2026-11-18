@@ -1,0 +1,321 @@
+text,label,category
+"Reached my PG hostel safely, locked the door.",0,Normal
+"Please hurry. Reached my PG hostel safely, locked the door.",0,Normal
+"Happening right now. Reached my PG hostel safely, locked the door.",0,Normal
+"Very scared. Reached my PG hostel safely, locked the door.",0,Normal
+"I am on the metro yellow line, sitting in the ladies coach.",0,Normal
+"Please hurry. I am on the metro yellow line, sitting in the ladies coach.",0,Normal
+"Happening right now. I am on the metro yellow line, sitting in the ladies coach.",0,Normal
+"Very scared. I am on the metro yellow line, sitting in the ladies coach.",0,Normal
+"Traffic is quite heavy near the flyover, will reach in 30 mins.",0,Normal
+"Please hurry. Traffic is quite heavy near the flyover, will reach in 30 mins.",0,Normal
+"Happening right now. Traffic is quite heavy near the flyover, will reach in 30 mins.",0,Normal
+"Very scared. Traffic is quite heavy near the flyover, will reach in 30 mins.",0,Normal
+Boarded the DTC bus 534 from Lajpat Nagar.,0,Normal
+Please hurry. Boarded the DTC bus 534 from Lajpat Nagar.,0,Normal
+Happening right now. Boarded the DTC bus 534 from Lajpat Nagar.,0,Normal
+Very scared. Boarded the DTC bus 534 from Lajpat Nagar.,0,Normal
+Having dinner with my college roommates at the cafe.,0,Normal
+Please hurry. Having dinner with my college roommates at the cafe.,0,Normal
+Happening right now. Having dinner with my college roommates at the cafe.,0,Normal
+Very scared. Having dinner with my college roommates at the cafe.,0,Normal
+"Just booked an Uber cab, driver name Ramesh, cab number 4821.",0,Normal
+"Please hurry. Just booked an Uber cab, driver name Ramesh, cab number 4821.",0,Normal
+"Happening right now. Just booked an Uber cab, driver name Ramesh, cab number 4821.",0,Normal
+"Very scared. Just booked an Uber cab, driver name Ramesh, cab number 4821.",0,Normal
+Walking towards the campus library with my friend.,0,Normal
+Please hurry. Walking towards the campus library with my friend.,0,Normal
+Happening right now. Walking towards the campus library with my friend.,0,Normal
+Very scared. Walking towards the campus library with my friend.,0,Normal
+Street is well lit and crowded with evening shoppers.,0,Normal
+Please hurry. Street is well lit and crowded with evening shoppers.,0,Normal
+Happening right now. Street is well lit and crowded with evening shoppers.,0,Normal
+Very scared. Street is well lit and crowded with evening shoppers.,0,Normal
+"Train has reached platform 4, deboarding now.",0,Normal
+"Please hurry. Train has reached platform 4, deboarding now.",0,Normal
+"Happening right now. Train has reached platform 4, deboarding now.",0,Normal
+"Very scared. Train has reached platform 4, deboarding now.",0,Normal
+"Office meeting finished, heading towards the parking lot.",0,Normal
+"Please hurry. Office meeting finished, heading towards the parking lot.",0,Normal
+"Happening right now. Office meeting finished, heading towards the parking lot.",0,Normal
+"Very scared. Office meeting finished, heading towards the parking lot.",0,Normal
+Mom I have reached Bangalore airport terminal 1 safely.,0,Normal
+Please hurry. Mom I have reached Bangalore airport terminal 1 safely.,0,Normal
+Happening right now. Mom I have reached Bangalore airport terminal 1 safely.,0,Normal
+Very scared. Mom I have reached Bangalore airport terminal 1 safely.,0,Normal
+Auto rickshaw driver is following Google Maps route properly.,0,Normal
+Please hurry. Auto rickshaw driver is following Google Maps route properly.,0,Normal
+Happening right now. Auto rickshaw driver is following Google Maps route properly.,0,Normal
+Very scared. Auto rickshaw driver is following Google Maps route properly.,0,Normal
+Waiting for my father to pick me up from the metro station.,0,Normal
+Please hurry. Waiting for my father to pick me up from the metro station.,0,Normal
+Happening right now. Waiting for my father to pick me up from the metro station.,0,Normal
+Very scared. Waiting for my father to pick me up from the metro station.,0,Normal
+Bus conductor gave me a ladies seat in the front row.,0,Normal
+Please hurry. Bus conductor gave me a ladies seat in the front row.,0,Normal
+Happening right now. Bus conductor gave me a ladies seat in the front row.,0,Normal
+Very scared. Bus conductor gave me a ladies seat in the front row.,0,Normal
+"Walking through the main market road, lots of street vendors here.",0,Normal
+"Please hurry. Walking through the main market road, lots of street vendors here.",0,Normal
+"Happening right now. Walking through the main market road, lots of street vendors here.",0,Normal
+"Very scared. Walking through the main market road, lots of street vendors here.",0,Normal
+Shared my live location with you on WhatsApp.,0,Normal
+Please hurry. Shared my live location with you on WhatsApp.,0,Normal
+Happening right now. Shared my live location with you on WhatsApp.,0,Normal
+Very scared. Shared my live location with you on WhatsApp.,0,Normal
+"Reached the coaching institute, class starts in 10 minutes.",0,Normal
+"Please hurry. Reached the coaching institute, class starts in 10 minutes.",0,Normal
+"Happening right now. Reached the coaching institute, class starts in 10 minutes.",0,Normal
+"Very scared. Reached the coaching institute, class starts in 10 minutes.",0,Normal
+Taking the skywalk towards the residential gate.,0,Normal
+Please hurry. Taking the skywalk towards the residential gate.,0,Normal
+Happening right now. Taking the skywalk towards the residential gate.,0,Normal
+Very scared. Taking the skywalk towards the residential gate.,0,Normal
+"Everything looks fine here, nothing to worry about.",0,Normal
+"Please hurry. Everything looks fine here, nothing to worry about.",0,Normal
+"Happening right now. Everything looks fine here, nothing to worry about.",0,Normal
+"Very scared. Everything looks fine here, nothing to worry about.",0,Normal
+"Entered the apartment building, taking the lift now.",0,Normal
+"Please hurry. Entered the apartment building, taking the lift now.",0,Normal
+"Happening right now. Entered the apartment building, taking the lift now.",0,Normal
+"Very scared. Entered the apartment building, taking the lift now.",0,Normal
+A black car has been driving very slowly behind me for 3 streets.,1,Suspicious
+Please hurry. A black car has been driving very slowly behind me for 3 streets.,1,Suspicious
+Happening right now. A black car has been driving very slowly behind me for 3 streets.,1,Suspicious
+Very scared. A black car has been driving very slowly behind me for 3 streets.,1,Suspicious
+Two men are standing near the dark corner watching every pedestrian.,1,Suspicious
+Please hurry. Two men are standing near the dark corner watching every pedestrian.,1,Suspicious
+Happening right now. Two men are standing near the dark corner watching every pedestrian.,1,Suspicious
+Very scared. Two men are standing near the dark corner watching every pedestrian.,1,Suspicious
+Someone is loitering near my hostel gate looking around nervously.,1,Suspicious
+Please hurry. Someone is loitering near my hostel gate looking around nervously.,1,Suspicious
+Happening right now. Someone is loitering near my hostel gate looking around nervously.,1,Suspicious
+Very scared. Someone is loitering near my hostel gate looking around nervously.,1,Suspicious
+A guy on a scooter passed by three times looking straight at me.,1,Suspicious
+Please hurry. A guy on a scooter passed by three times looking straight at me.,1,Suspicious
+Happening right now. A guy on a scooter passed by three times looking straight at me.,1,Suspicious
+Very scared. A guy on a scooter passed by three times looking straight at me.,1,Suspicious
+I feel like I am being followed since I stepped out of the station.,1,Suspicious
+Please hurry. I feel like I am being followed since I stepped out of the station.,1,Suspicious
+Happening right now. I feel like I am being followed since I stepped out of the station.,1,Suspicious
+Very scared. I feel like I am being followed since I stepped out of the station.,1,Suspicious
+The cab driver took a strange turn into an unlit narrow dirt lane.,1,Suspicious
+Please hurry. The cab driver took a strange turn into an unlit narrow dirt lane.,1,Suspicious
+Happening right now. The cab driver took a strange turn into an unlit narrow dirt lane.,1,Suspicious
+Very scared. The cab driver took a strange turn into an unlit narrow dirt lane.,1,Suspicious
+A group of men are staring and matching my walking pace.,1,Suspicious
+Please hurry. A group of men are staring and matching my walking pace.,1,Suspicious
+Happening right now. A group of men are staring and matching my walking pace.,1,Suspicious
+Very scared. A group of men are staring and matching my walking pace.,1,Suspicious
+All the streetlights are completely off and someone is walking quietly behind me.,1,Suspicious
+Please hurry. All the streetlights are completely off and someone is walking quietly behind me.,1,Suspicious
+Happening right now. All the streetlights are completely off and someone is walking quietly behind me.,1,Suspicious
+Very scared. All the streetlights are completely off and someone is walking quietly behind me.,1,Suspicious
+The auto driver turned off the meter and refused to take the main road.,1,Suspicious
+Please hurry. The auto driver turned off the meter and refused to take the main road.,1,Suspicious
+Happening right now. The auto driver turned off the meter and refused to take the main road.,1,Suspicious
+Very scared. The auto driver turned off the meter and refused to take the main road.,1,Suspicious
+A stranger followed me from the bus stop into the residential alley.,1,Suspicious
+Please hurry. A stranger followed me from the bus stop into the residential alley.,1,Suspicious
+Happening right now. A stranger followed me from the bus stop into the residential alley.,1,Suspicious
+Very scared. A stranger followed me from the bus stop into the residential alley.,1,Suspicious
+A man is standing right outside my building entrance watching my window.,1,Suspicious
+Please hurry. A man is standing right outside my building entrance watching my window.,1,Suspicious
+Happening right now. A man is standing right outside my building entrance watching my window.,1,Suspicious
+Very scared. A man is standing right outside my building entrance watching my window.,1,Suspicious
+A bike without a number plate has stopped 20 meters ahead of me.,1,Suspicious
+Please hurry. A bike without a number plate has stopped 20 meters ahead of me.,1,Suspicious
+Happening right now. A bike without a number plate has stopped 20 meters ahead of me.,1,Suspicious
+Very scared. A bike without a number plate has stopped 20 meters ahead of me.,1,Suspicious
+Someone is pacing back and forth outside the ATM booth while I am inside.,1,Suspicious
+Please hurry. Someone is pacing back and forth outside the ATM booth while I am inside.,1,Suspicious
+Happening right now. Someone is pacing back and forth outside the ATM booth while I am inside.,1,Suspicious
+Very scared. Someone is pacing back and forth outside the ATM booth while I am inside.,1,Suspicious
+The driver keeps looking at me repeatedly in the rear-view mirror.,1,Suspicious
+Please hurry. The driver keeps looking at me repeatedly in the rear-view mirror.,1,Suspicious
+Happening right now. The driver keeps looking at me repeatedly in the rear-view mirror.,1,Suspicious
+Very scared. The driver keeps looking at me repeatedly in the rear-view mirror.,1,Suspicious
+A guy got down from the bus right behind me and is walking in my shadow.,1,Suspicious
+Please hurry. A guy got down from the bus right behind me and is walking in my shadow.,1,Suspicious
+Happening right now. A guy got down from the bus right behind me and is walking in my shadow.,1,Suspicious
+Very scared. A guy got down from the bus right behind me and is walking in my shadow.,1,Suspicious
+The dark pathway through the park feels very unsafe right now.,1,Suspicious
+Please hurry. The dark pathway through the park feels very unsafe right now.,1,Suspicious
+Happening right now. The dark pathway through the park feels very unsafe right now.,1,Suspicious
+Very scared. The dark pathway through the park feels very unsafe right now.,1,Suspicious
+Two individuals are whispering and pointing towards me near the overbridge.,1,Suspicious
+Please hurry. Two individuals are whispering and pointing towards me near the overbridge.,1,Suspicious
+Happening right now. Two individuals are whispering and pointing towards me near the overbridge.,1,Suspicious
+Very scared. Two individuals are whispering and pointing towards me near the overbridge.,1,Suspicious
+A van has parked beside the footpath with engine running and headlights off.,1,Suspicious
+Please hurry. A van has parked beside the footpath with engine running and headlights off.,1,Suspicious
+Happening right now. A van has parked beside the footpath with engine running and headlights off.,1,Suspicious
+Very scared. A van has parked beside the footpath with engine running and headlights off.,1,Suspicious
+Someone is tracking my footsteps in the staircase.,1,Suspicious
+Please hurry. Someone is tracking my footsteps in the staircase.,1,Suspicious
+Happening right now. Someone is tracking my footsteps in the staircase.,1,Suspicious
+Very scared. Someone is tracking my footsteps in the staircase.,1,Suspicious
+An unknown person is lingering around my parked car.,1,Suspicious
+Please hurry. An unknown person is lingering around my parked car.,1,Suspicious
+Happening right now. An unknown person is lingering around my parked car.,1,Suspicious
+Very scared. An unknown person is lingering around my parked car.,1,Suspicious
+A man is catcalling and shouting vulgar comments at the bus stop.,2,Harassment
+Please hurry. A man is catcalling and shouting vulgar comments at the bus stop.,2,Harassment
+Happening right now. A man is catcalling and shouting vulgar comments at the bus stop.,2,Harassment
+Very scared. A man is catcalling and shouting vulgar comments at the bus stop.,2,Harassment
+Someone just grabbed my arm and tried to block my pathway!,2,Harassment
+Please hurry. Someone just grabbed my arm and tried to block my pathway!,2,Harassment
+Happening right now. Someone just grabbed my arm and tried to block my pathway!,2,Harassment
+Very scared. Someone just grabbed my arm and tried to block my pathway!,2,Harassment
+A stranger is aggressively demanding my phone number and refuses to leave.,2,Harassment
+Please hurry. A stranger is aggressively demanding my phone number and refuses to leave.,2,Harassment
+Happening right now. A stranger is aggressively demanding my phone number and refuses to leave.,2,Harassment
+Very scared. A stranger is aggressively demanding my phone number and refuses to leave.,2,Harassment
+Two men on a bike whistled and made obscene hand gestures as they passed.,2,Harassment
+Please hurry. Two men on a bike whistled and made obscene hand gestures as they passed.,2,Harassment
+Happening right now. Two men on a bike whistled and made obscene hand gestures as they passed.,2,Harassment
+Very scared. Two men on a bike whistled and made obscene hand gestures as they passed.,2,Harassment
+A guy followed me inside the elevator and made inappropriate sexual remarks.,2,Harassment
+Please hurry. A guy followed me inside the elevator and made inappropriate sexual remarks.,2,Harassment
+Happening right now. A guy followed me inside the elevator and made inappropriate sexual remarks.,2,Harassment
+Very scared. A guy followed me inside the elevator and made inappropriate sexual remarks.,2,Harassment
+He blocked the narrow lane and is threatening me if I scream.,2,Harassment
+Please hurry. He blocked the narrow lane and is threatening me if I scream.,2,Harassment
+Happening right now. He blocked the narrow lane and is threatening me if I scream.,2,Harassment
+Very scared. He blocked the narrow lane and is threatening me if I scream.,2,Harassment
+A man on a scooter tried to touch my shoulder while speeding past.,2,Harassment
+Please hurry. A man on a scooter tried to touch my shoulder while speeding past.,2,Harassment
+Happening right now. A man on a scooter tried to touch my shoulder while speeding past.,2,Harassment
+Very scared. A man on a scooter tried to touch my shoulder while speeding past.,2,Harassment
+They are passing filthy comments outside my door and laughing.,2,Harassment
+Please hurry. They are passing filthy comments outside my door and laughing.,2,Harassment
+Happening right now. They are passing filthy comments outside my door and laughing.,2,Harassment
+Very scared. They are passing filthy comments outside my door and laughing.,2,Harassment
+Someone is taking photos of me without consent on the bus.,2,Harassment
+Please hurry. Someone is taking photos of me without consent on the bus.,2,Harassment
+Happening right now. Someone is taking photos of me without consent on the bus.,2,Harassment
+Very scared. Someone is taking photos of me without consent on the bus.,2,Harassment
+He pulled my backpack strap and whispered abusive words in my ear.,2,Harassment
+Please hurry. He pulled my backpack strap and whispered abusive words in my ear.,2,Harassment
+Happening right now. He pulled my backpack strap and whispered abusive words in my ear.,2,Harassment
+Very scared. He pulled my backpack strap and whispered abusive words in my ear.,2,Harassment
+A drunk guy is shouting vulgarities and following me down the street.,2,Harassment
+Please hurry. A drunk guy is shouting vulgarities and following me down the street.,2,Harassment
+Happening right now. A drunk guy is shouting vulgarities and following me down the street.,2,Harassment
+Very scared. A drunk guy is shouting vulgarities and following me down the street.,2,Harassment
+Two men blocked the sidewalk and are laughing while trapping me.,2,Harassment
+Please hurry. Two men blocked the sidewalk and are laughing while trapping me.,2,Harassment
+Happening right now. Two men blocked the sidewalk and are laughing while trapping me.,2,Harassment
+Very scared. Two men blocked the sidewalk and are laughing while trapping me.,2,Harassment
+He keeps nudging against me on the crowded metro deliberately.,2,Harassment
+Please hurry. He keeps nudging against me on the crowded metro deliberately.,2,Harassment
+Happening right now. He keeps nudging against me on the crowded metro deliberately.,2,Harassment
+Very scared. He keeps nudging against me on the crowded metro deliberately.,2,Harassment
+A man opened his car window and shouted lewd sexual propositions at me.,2,Harassment
+Please hurry. A man opened his car window and shouted lewd sexual propositions at me.,2,Harassment
+Happening right now. A man opened his car window and shouted lewd sexual propositions at me.,2,Harassment
+Very scared. A man opened his car window and shouted lewd sexual propositions at me.,2,Harassment
+He flashed himself near the dark corner of the underpass!,2,Harassment
+Please hurry. He flashed himself near the dark corner of the underpass!,2,Harassment
+Happening right now. He flashed himself near the dark corner of the underpass!,2,Harassment
+Very scared. He flashed himself near the dark corner of the underpass!,2,Harassment
+A guy grabbed my dupatta and tried to drag me backwards!,2,Harassment
+Please hurry. A guy grabbed my dupatta and tried to drag me backwards!,2,Harassment
+Happening right now. A guy grabbed my dupatta and tried to drag me backwards!,2,Harassment
+Very scared. A guy grabbed my dupatta and tried to drag me backwards!,2,Harassment
+Someone is persistently stalking me every evening from work to home.,2,Harassment
+Please hurry. Someone is persistently stalking me every evening from work to home.,2,Harassment
+Happening right now. Someone is persistently stalking me every evening from work to home.,2,Harassment
+Very scared. Someone is persistently stalking me every evening from work to home.,2,Harassment
+He cornered me near the vending machine and won't let me pass.,2,Harassment
+Please hurry. He cornered me near the vending machine and won't let me pass.,2,Harassment
+Happening right now. He cornered me near the vending machine and won't let me pass.,2,Harassment
+Very scared. He cornered me near the vending machine and won't let me pass.,2,Harassment
+Two youths are hurling aggressive sexual slurs outside the hostel.,2,Harassment
+Please hurry. Two youths are hurling aggressive sexual slurs outside the hostel.,2,Harassment
+Happening right now. Two youths are hurling aggressive sexual slurs outside the hostel.,2,Harassment
+Very scared. Two youths are hurling aggressive sexual slurs outside the hostel.,2,Harassment
+A man is knocking aggressively on my cab window at the red light.,2,Harassment
+Please hurry. A man is knocking aggressively on my cab window at the red light.,2,Harassment
+Happening right now. A man is knocking aggressively on my cab window at the red light.,2,Harassment
+Very scared. A man is knocking aggressively on my cab window at the red light.,2,Harassment
+"HELP ME! I am being attacked near the park entrance, send police now!",3,Emergency
+"Please hurry. HELP ME! I am being attacked near the park entrance, send police now!",3,Emergency
+"Happening right now. HELP ME! I am being attacked near the park entrance, send police now!",3,Emergency
+"Very scared. HELP ME! I am being attacked near the park entrance, send police now!",3,Emergency
+EMERGENCY! Someone is trying to force me into a van! PLEASE HURRY!,3,Emergency
+Please hurry. EMERGENCY! Someone is trying to force me into a van! PLEASE HURRY!,3,Emergency
+Happening right now. EMERGENCY! Someone is trying to force me into a van! PLEASE HURRY!,3,Emergency
+Very scared. EMERGENCY! Someone is trying to force me into a van! PLEASE HURRY!,3,Emergency
+"I am trapped in a room and someone is banging violently on the door, HELP!",3,Emergency
+"Please hurry. I am trapped in a room and someone is banging violently on the door, HELP!",3,Emergency
+"Happening right now. I am trapped in a room and someone is banging violently on the door, HELP!",3,Emergency
+"Very scared. I am trapped in a room and someone is banging violently on the door, HELP!",3,Emergency
+SOS! He has a knife and is threatening to kill me! Send help immediately!,3,Emergency
+Please hurry. SOS! He has a knife and is threatening to kill me! Send help immediately!,3,Emergency
+Happening right now. SOS! He has a knife and is threatening to kill me! Send help immediately!,3,Emergency
+Very scared. SOS! He has a knife and is threatening to kill me! Send help immediately!,3,Emergency
+Help me please! I am bleeding and hiding behind the petrol pump!,3,Emergency
+Please hurry. Help me please! I am bleeding and hiding behind the petrol pump!,3,Emergency
+Happening right now. Help me please! I am bleeding and hiding behind the petrol pump!,3,Emergency
+Very scared. Help me please! I am bleeding and hiding behind the petrol pump!,3,Emergency
+HE IS ATTACKING ME! SEND POLICE TO NEAR METRO PILLAR 42 NOW!,3,Emergency
+Please hurry. HE IS ATTACKING ME! SEND POLICE TO NEAR METRO PILLAR 42 NOW!,3,Emergency
+Happening right now. HE IS ATTACKING ME! SEND POLICE TO NEAR METRO PILLAR 42 NOW!,3,Emergency
+Very scared. HE IS ATTACKING ME! SEND POLICE TO NEAR METRO PILLAR 42 NOW!,3,Emergency
+"EMERGENCY SOS! Kidnapping attempt in progress, send police right now!",3,Emergency
+"Please hurry. EMERGENCY SOS! Kidnapping attempt in progress, send police right now!",3,Emergency
+"Happening right now. EMERGENCY SOS! Kidnapping attempt in progress, send police right now!",3,Emergency
+"Very scared. EMERGENCY SOS! Kidnapping attempt in progress, send police right now!",3,Emergency
+"I need urgent help, someone broke the window and entered my flat!",3,Emergency
+"Please hurry. I need urgent help, someone broke the window and entered my flat!",3,Emergency
+"Happening right now. I need urgent help, someone broke the window and entered my flat!",3,Emergency
+"Very scared. I need urgent help, someone broke the window and entered my flat!",3,Emergency
+"SOS! Being physically assaulted in the alleyway, can't escape!",3,Emergency
+"Please hurry. SOS! Being physically assaulted in the alleyway, can't escape!",3,Emergency
+"Happening right now. SOS! Being physically assaulted in the alleyway, can't escape!",3,Emergency
+"Very scared. SOS! Being physically assaulted in the alleyway, can't escape!",3,Emergency
+"HELP! Physical violence underway, immediate police intervention needed!",3,Emergency
+"Please hurry. HELP! Physical violence underway, immediate police intervention needed!",3,Emergency
+"Happening right now. HELP! Physical violence underway, immediate police intervention needed!",3,Emergency
+"Very scared. HELP! Physical violence underway, immediate police intervention needed!",3,Emergency
+HE HAS CORNERED ME WITH A WEAPON! SEND IMMEDIATE HELP TO PARK STREET!,3,Emergency
+Please hurry. HE HAS CORNERED ME WITH A WEAPON! SEND IMMEDIATE HELP TO PARK STREET!,3,Emergency
+Happening right now. HE HAS CORNERED ME WITH A WEAPON! SEND IMMEDIATE HELP TO PARK STREET!,3,Emergency
+Very scared. HE HAS CORNERED ME WITH A WEAPON! SEND IMMEDIATE HELP TO PARK STREET!,3,Emergency
+HELP! MY CAB DRIVER HAS LOCKED THE DOORS AND IS SPEEDING AWAY TOWARDS THE JUNGLE!,3,Emergency
+Please hurry. HELP! MY CAB DRIVER HAS LOCKED THE DOORS AND IS SPEEDING AWAY TOWARDS THE JUNGLE!,3,Emergency
+Happening right now. HELP! MY CAB DRIVER HAS LOCKED THE DOORS AND IS SPEEDING AWAY TOWARDS THE JUNGLE!,3,Emergency
+Very scared. HELP! MY CAB DRIVER HAS LOCKED THE DOORS AND IS SPEEDING AWAY TOWARDS THE JUNGLE!,3,Emergency
+"SOS EMERGENCY! Someone is choking me, please send police right away!",3,Emergency
+"Please hurry. SOS EMERGENCY! Someone is choking me, please send police right away!",3,Emergency
+"Happening right now. SOS EMERGENCY! Someone is choking me, please send police right away!",3,Emergency
+"Very scared. SOS EMERGENCY! Someone is choking me, please send police right away!",3,Emergency
+HE IS DRAGGING ME INTO AN ABANDONED BUILDING! HELP PLEASE!,3,Emergency
+Please hurry. HE IS DRAGGING ME INTO AN ABANDONED BUILDING! HELP PLEASE!,3,Emergency
+Happening right now. HE IS DRAGGING ME INTO AN ABANDONED BUILDING! HELP PLEASE!,3,Emergency
+Very scared. HE IS DRAGGING ME INTO AN ABANDONED BUILDING! HELP PLEASE!,3,Emergency
+"EMERGENCY! I AM BEING PHYSICALLY ATTACKED BY THREE MEN, SEND HELP FAST!",3,Emergency
+"Please hurry. EMERGENCY! I AM BEING PHYSICALLY ATTACKED BY THREE MEN, SEND HELP FAST!",3,Emergency
+"Happening right now. EMERGENCY! I AM BEING PHYSICALLY ATTACKED BY THREE MEN, SEND HELP FAST!",3,Emergency
+"Very scared. EMERGENCY! I AM BEING PHYSICALLY ATTACKED BY THREE MEN, SEND HELP FAST!",3,Emergency
+"HELP ME! I am hiding inside the washroom, they are trying to break the lock!",3,Emergency
+"Please hurry. HELP ME! I am hiding inside the washroom, they are trying to break the lock!",3,Emergency
+"Happening right now. HELP ME! I am hiding inside the washroom, they are trying to break the lock!",3,Emergency
+"Very scared. HELP ME! I am hiding inside the washroom, they are trying to break the lock!",3,Emergency
+"SOS! Armed assault in progress, please dispatch police to Connaught Place block B!",3,Emergency
+"Please hurry. SOS! Armed assault in progress, please dispatch police to Connaught Place block B!",3,Emergency
+"Happening right now. SOS! Armed assault in progress, please dispatch police to Connaught Place block B!",3,Emergency
+"Very scared. SOS! Armed assault in progress, please dispatch police to Connaught Place block B!",3,Emergency
+"HE HIT ME ON THE HEAD AND IS TRYING TO ABDUCT ME, EMERGENCY POLICE NEEDED!",3,Emergency
+"Please hurry. HE HIT ME ON THE HEAD AND IS TRYING TO ABDUCT ME, EMERGENCY POLICE NEEDED!",3,Emergency
+"Happening right now. HE HIT ME ON THE HEAD AND IS TRYING TO ABDUCT ME, EMERGENCY POLICE NEEDED!",3,Emergency
+"Very scared. HE HIT ME ON THE HEAD AND IS TRYING TO ABDUCT ME, EMERGENCY POLICE NEEDED!",3,Emergency
+HELP SOS! VIOLENT ATTACK IN PROGRESS NEAR THE SUBWAY EXIT!,3,Emergency
+Please hurry. HELP SOS! VIOLENT ATTACK IN PROGRESS NEAR THE SUBWAY EXIT!,3,Emergency
+Happening right now. HELP SOS! VIOLENT ATTACK IN PROGRESS NEAR THE SUBWAY EXIT!,3,Emergency
+Very scared. HELP SOS! VIOLENT ATTACK IN PROGRESS NEAR THE SUBWAY EXIT!,3,Emergency
+SEND POLICE IMMEDIATELY! LIFE THREATENING DISTRESS AT SECTOR 62!,3,Emergency
+Please hurry. SEND POLICE IMMEDIATELY! LIFE THREATENING DISTRESS AT SECTOR 62!,3,Emergency
+Happening right now. SEND POLICE IMMEDIATELY! LIFE THREATENING DISTRESS AT SECTOR 62!,3,Emergency
+Very scared. SEND POLICE IMMEDIATELY! LIFE THREATENING DISTRESS AT SECTOR 62!,3,Emergency

@@ -8,15 +8,32 @@
 __pycache__/
 *.py[cod]
 .venv/
+.venv312/
 venv/
+
+#Databases and local data
+*.db
+*.sqlite
+*.sqlite3
 
 # Frontend
 node_modules/
 dist/
+dist-ssr/
+.vite-cache/
+
+#Python and downloaded data caches
+cache/
 
 # Logs and local files
 *.log
 .DS_Store
+Thumbs.db
+
+#Editor files
+.idea/
+.vscode/
 
 # Local email testing
 Backend/test_smpt.py
+

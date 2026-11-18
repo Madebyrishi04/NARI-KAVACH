@@ -1,0 +1,7 @@
+{
+  "model_type": "HuggingFace_DistilBERT_Base_Uncased",
+  "val_accuracy": 0.9688,
+  "macro_f1": 0.9686,
+  "num_training_samples": 256,
+  "num_val_samples": 64
+}

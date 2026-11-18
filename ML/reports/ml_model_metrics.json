@@ -1,0 +1,81 @@
+{
+  "model_results": {
+    "Logistic_Regression": {
+      "accuracy": 0.8067,
+      "precision_macro": 0.7116,
+      "recall_macro": 0.8386,
+      "f1_macro": 0.7496,
+      "high_risk_recall": 0.9032,
+      "roc_auc_ovr": 0.9362,
+      "confusion_matrix": [
+        [
+          290,
+          46,
+          0
+        ],
+        [
+          63,
+          287,
+          33
+        ],
+        [
+          0,
+          3,
+          28
+        ]
+      ]
+    },
+    "Random_Forest": {
+      "accuracy": 0.8773,
+      "precision_macro": 0.9171,
+      "recall_macro": 0.7669,
+      "f1_macro": 0.8161,
+      "high_risk_recall": 0.5161,
+      "roc_auc_ovr": 0.9697,
+      "confusion_matrix": [
+        [
+          297,
+          39,
+          0
+        ],
+        [
+          38,
+          345,
+          0
+        ],
+        [
+          0,
+          15,
+          16
+        ]
+      ]
+    },
+    "XGBoost": {
+      "accuracy": 0.8813,
+      "precision_macro": 0.8737,
+      "recall_macro": 0.849,
+      "f1_macro": 0.8606,
+      "high_risk_recall": 0.7742,
+      "roc_auc_ovr": 0.9707,
+      "confusion_matrix": [
+        [
+          300,
+          36,
+          0
+        ],
+        [
+          42,
+          337,
+          4
+        ],
+        [
+          0,
+          7,
+          24
+        ]
+      ]
+    }
+  },
+  "best_model": "XGBoost",
+  "selection_criteria": "Balanced Macro-F1 + High-Risk Recall"
+}

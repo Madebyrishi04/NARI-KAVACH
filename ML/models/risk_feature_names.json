@@ -1,0 +1,28 @@
+{
+  "feature_names": [
+    "hour",
+    "day_of_week",
+    "month",
+    "dist_police_km",
+    "dist_hospital_km",
+    "street_lighting_score",
+    "recent_reports_count",
+    "historical_crime_rate",
+    "historical_severity_index",
+    "weather_condition_Clear",
+    "weather_condition_Fog",
+    "weather_condition_Rain",
+    "weather_condition_Storm",
+    "zone_type_Commercial",
+    "zone_type_Industrial",
+    "zone_type_Isolated",
+    "zone_type_Residential",
+    "zone_type_Transit_Hub"
+  ],
+  "best_model_name": "XGBoost",
+  "categories": {
+    "0": "LOW",
+    "1": "MEDIUM",
+    "2": "HIGH"
+  }
+}

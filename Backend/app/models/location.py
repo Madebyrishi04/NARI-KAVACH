@@ -1,8 +1,19 @@
-from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from geoalchemy2 import Geography
 
-from app.database.connection import Base
+from app.database.connection import Base, IS_SQLITE
+
+if IS_SQLITE:
+    LocationType = Column(String, nullable=True)
+else:
+    LocationType = Column(
+        Geography(
+            geometry_type="POINT",
+            srid=4326
+        ),
+        nullable=True
+    )
 
 
 class UserLocation(Base):
@@ -30,13 +41,7 @@ class UserLocation(Base):
         nullable=False
     )
 
-    location = Column(
-        Geography(
-            geometry_type="POINT",
-            srid=4326
-        ),
-        nullable=True
-    )
+    location = LocationType
 
     recorded_at = Column(
         DateTime(timezone=True),

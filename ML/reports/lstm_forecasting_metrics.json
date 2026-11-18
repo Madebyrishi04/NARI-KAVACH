@@ -1,0 +1,14 @@
+{
+  "LSTM": {
+    "MAE": 1.4333,
+    "RMSE": 1.8453
+  },
+  "Naive_Persistence": {
+    "MAE": 1.2443,
+    "RMSE": 1.8267
+  },
+  "Moving_Average": {
+    "MAE": 1.2553,
+    "RMSE": 1.8017
+  }
+}

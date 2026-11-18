@@ -25,6 +25,9 @@ from app.routers.alert_history import router as alert_history_router
 from app.routers.safety_report import router as safety_report_router
 from app.routers.journey import router as journey_router
 from app.routers.destination import router as destination_router
+from app.routers.ml_risk import router as ml_risk_router
+from app.routers.routes import router as routes_router
+from app.routers.analytics import router as analytics_router
 
 from app.core.dependencies import get_current_user_id
 
@@ -35,8 +38,8 @@ Base.metadata.create_all(bind=engine)
 
 # Create FastAPI application
 app = FastAPI(
-    title="Personal Safety API",
-    description="Backend for our safety application",
+    title="NariShield AI • Personal Safety API",
+    description="Backend for AI-Powered Women Safety & Intelligent Route Risk Prediction",
     version="1.0.0"
 )
 
@@ -44,7 +47,12 @@ app = FastAPI(
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "*"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,6 +71,9 @@ app.include_router(alert_history_router)
 app.include_router(safety_report_router)
 app.include_router(journey_router)
 app.include_router(destination_router)
+app.include_router(ml_risk_router)
+app.include_router(routes_router)
+app.include_router(analytics_router)
 
 
 @app.get("/")

@@ -1,0 +1,6 @@
+report_id,latitude,longitude,incident_type,verification_status,upvotes,timestamp
+REP_001,28.633,77.2199,Poor_Lighting_Dark,community_confirmed,7,2026-10-29T07:13:40.258635+00:00
+REP_002,28.6315,77.218,Stalking_Following,verified_official,14,2026-10-29T06:53:40.258635+00:00
+REP_003,28.549,77.201,Harassment_Physical,community_confirmed,5,2026-10-29T04:38:40.258635+00:00
+REP_004,28.524,77.206,Verbal_Abuse,unverified,1,2026-10-29T00:38:40.258635+00:00
+REP_005,28.578,77.332,SOS_Distress,verified_official,22,2026-10-29T07:28:40.258635+00:00

@@ -1,0 +1,74 @@
+[
+  {
+    "feature": "historical_crime_rate",
+    "mean_abs_shap": 2.2438814640045166
+  },
+  {
+    "feature": "street_lighting_score",
+    "mean_abs_shap": 1.402988076210022
+  },
+  {
+    "feature": "hour",
+    "mean_abs_shap": 1.0969794988632202
+  },
+  {
+    "feature": "recent_reports_count",
+    "mean_abs_shap": 0.554610013961792
+  },
+  {
+    "feature": "dist_police_km",
+    "mean_abs_shap": 0.520286500453949
+  },
+  {
+    "feature": "dist_hospital_km",
+    "mean_abs_shap": 0.14327998459339142
+  },
+  {
+    "feature": "zone_type_Isolated",
+    "mean_abs_shap": 0.11904098838567734
+  },
+  {
+    "feature": "day_of_week",
+    "mean_abs_shap": 0.09941241890192032
+  },
+  {
+    "feature": "month",
+    "mean_abs_shap": 0.08874725550413132
+  },
+  {
+    "feature": "weather_condition_Clear",
+    "mean_abs_shap": 0.061201490461826324
+  },
+  {
+    "feature": "zone_type_Industrial",
+    "mean_abs_shap": 0.046809908002614975
+  },
+  {
+    "feature": "weather_condition_Rain",
+    "mean_abs_shap": 0.04240557178854942
+  },
+  {
+    "feature": "zone_type_Commercial",
+    "mean_abs_shap": 0.024086369201540947
+  },
+  {
+    "feature": "weather_condition_Fog",
+    "mean_abs_shap": 0.014235734939575195
+  },
+  {
+    "feature": "zone_type_Residential",
+    "mean_abs_shap": 0.006209981627762318
+  },
+  {
+    "feature": "weather_condition_Storm",
+    "mean_abs_shap": 0.00617347564548254
+  },
+  {
+    "feature": "historical_severity_index",
+    "mean_abs_shap": 0.004711827263236046
+  },
+  {
+    "feature": "zone_type_Transit_Hub",
+    "mean_abs_shap": 0.00027421920094639063
+  }
+]

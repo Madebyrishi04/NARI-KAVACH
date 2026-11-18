@@ -4,13 +4,27 @@ from sqlalchemy import func
 from geoalchemy2 import Geography
 from geoalchemy2.elements import WKTElement
 
-from app.database.connection import get_db
+from app.database.connection import get_db, IS_SQLITE
 from app.models.safety_report import SafetyReport
 from app.schemas.safety_report import (
     SafetyReportCreate,
     SafetyReportResponse
 )
 from app.core.dependencies import get_current_user_id
+import math
+
+
+def haversine_distance_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    R = 6371000.0  # meters
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lon2 - lon1)
+    a = (math.sin(delta_phi / 2) ** 2 +
+         math.cos(phi1) * math.cos(phi2) *
+         math.sin(delta_lambda / 2) ** 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
 
 
 router = APIRouter(
@@ -29,6 +43,15 @@ def create_safety_report(
     user_id: int = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
+    loc_val = (
+        f"POINT({report_data.longitude} {report_data.latitude})"
+        if IS_SQLITE
+        else WKTElement(
+            f"POINT({report_data.longitude} {report_data.latitude})",
+            srid=4326
+        )
+    )
+
     new_report = SafetyReport(
         user_id=user_id,
         report_type=report_data.report_type,
@@ -36,10 +59,7 @@ def create_safety_report(
         severity=report_data.severity,
         latitude=report_data.latitude,
         longitude=report_data.longitude,
-        location=WKTElement(
-            f"POINT({report_data.longitude} {report_data.latitude})",
-            srid=4326
-        )
+        location=loc_val
     )
 
     db.add(new_report)
@@ -59,7 +79,6 @@ def get_safety_reports(
 ):
     reports = (
         db.query(SafetyReport)
-        .filter(SafetyReport.user_id == user_id)
         .order_by(SafetyReport.created_at.desc())
         .all()
     )
@@ -71,10 +90,32 @@ def get_safety_reports(
 def get_nearby_safety_reports(
     latitude: float,
     longitude: float,
-    radius_km: float = 1.0,
+    radius_km: float = 5.0,
     user_id: int = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
+    if IS_SQLITE:
+        all_reports = db.query(SafetyReport).all()
+        result = []
+        max_dist_m = radius_km * 1000.0
+
+        for report in all_reports:
+            d_m = haversine_distance_m(latitude, longitude, report.latitude, report.longitude)
+            if d_m <= max_dist_m:
+                result.append({
+                    "id": report.id,
+                    "user_id": report.user_id,
+                    "report_type": report.report_type,
+                    "description": report.description,
+                    "severity": report.severity,
+                    "latitude": report.latitude,
+                    "longitude": report.longitude,
+                    "distance_meters": round(float(d_m), 2)
+                })
+
+        result.sort(key=lambda x: x["distance_meters"])
+        return result
+
     user_point = func.ST_SetSRID(
         func.ST_MakePoint(longitude, latitude),
         4326

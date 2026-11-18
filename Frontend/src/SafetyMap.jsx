@@ -48,6 +48,14 @@ function SafetyMap({ token }) {
   const [severityFilter, setSeverityFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
 
+  // New report modal state
+  const [showModal, setShowModal] = useState(false);
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const [reportSuccess, setReportSuccess] = useState("");
+  const [newReportType, setNewReportType] = useState("Harassment");
+  const [newSeverity, setNewSeverity] = useState("medium");
+  const [newDescription, setNewDescription] = useState("");
+
   const loadReports = useCallback(
     async (latitude, longitude, selectedRadius = radius) => {
       setLoading(true);
@@ -134,6 +142,52 @@ function SafetyMap({ token }) {
     detectLocation();
   }, [detectLocation]);
 
+  const handleSubmitReport = async (e) => {
+    e.preventDefault();
+    if (!token) {
+      setError("Please log in to submit a safety report.");
+      return;
+    }
+    if (!location) {
+      setError("Location needed before submitting report.");
+      return;
+    }
+    setSubmittingReport(true);
+    setError("");
+    setReportSuccess("");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/safety-reports/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          report_type: newReportType,
+          description: newDescription || "Safety incident reported by user",
+          severity: newSeverity,
+          latitude: location.latitude,
+          longitude: location.longitude
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to submit report");
+      }
+
+      setReportSuccess("✅ Safety report logged! Real-time map updated.");
+      setShowModal(false);
+      setNewDescription("");
+      await loadReports(location.latitude, location.longitude);
+    } catch (err) {
+      setError(err.message || "Could not submit report.");
+    } finally {
+      setSubmittingReport(false);
+    }
+  };
+
   const handleRadiusChange = (event) => {
     const nextRadius = event.target.value;
     setRadius(nextRadius);
@@ -180,6 +234,7 @@ function SafetyMap({ token }) {
       </div>
 
       {error && <p className="map-error">{error}</p>}
+      {reportSuccess && <p className="map-success-alert">{reportSuccess}</p>}
 
       <div className="safety-map-layout">
         <section className="map-panel">
@@ -199,6 +254,14 @@ function SafetyMap({ token }) {
               disabled={locating || loading}
             >
               {locating ? "Detecting..." : "Refresh location"}
+            </button>
+
+            <button
+              type="button"
+              className="report-incident-btn"
+              onClick={() => setShowModal(true)}
+            >
+              + Report Safety Issue
             </button>
           </div>
 
@@ -372,6 +435,64 @@ function SafetyMap({ token }) {
           </p>
         </aside>
       </div>
+
+      {showModal && (
+        <div className="report-modal-backdrop" onClick={() => setShowModal(false)}>
+          <div className="report-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Report Safety Issue</h3>
+              <button type="button" className="close-btn" onClick={() => setShowModal(false)}>✕</button>
+            </div>
+            <form onSubmit={handleSubmitReport}>
+              <div className="form-group">
+                <label>Issue Category</label>
+                <select value={newReportType} onChange={(e) => setNewReportType(e.target.value)}>
+                  <option value="Harassment">Harassment (Stalking, Catcalling)</option>
+                  <option value="Suspicious_Activity">Suspicious Activity / Loitering</option>
+                  <option value="Poor_Lighting">Poor Lighting / Dark Corridor</option>
+                  <option value="Isolated_Area">Isolated Area / Desolate Lane</option>
+                  <option value="Unsafe_Road">Unsafe Road Infrastructure</option>
+                  <option value="Other">Other Safety Concern</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Perceived Severity</label>
+                <select value={newSeverity} onChange={(e) => setNewSeverity(e.target.value)}>
+                  <option value="low">Low (Minor nuisance, caution)</option>
+                  <option value="medium">Medium (Uncomfortable / suspicious)</option>
+                  <option value="high">High (Active threat / harassment)</option>
+                  <option value="critical">Critical (Imminent danger / emergency)</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Description & Notes</label>
+                <textarea
+                  rows="3"
+                  placeholder="Describe what occurred, exact landmarks, or vehicle details..."
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-coords-hint">
+                <span>Location: {location ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)} (Current GPS)` : "Detecting..."}</span>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn-submit" disabled={submittingReport || !location}>
+                  {submittingReport ? "Logging Report..." : "Submit Safety Report"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

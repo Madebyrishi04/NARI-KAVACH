@@ -105,7 +105,7 @@ function Login({ onLogin }) {
       <header className="preview-bar">
         <div className="preview-left">
           <span className="preview-icon">◧</span>
-          <span>frontend preview → click to switch screens</span>
+          <span>CLICK TO SWITCH SCREENS →</span>
         </div>
 
         <div className="preview-right">

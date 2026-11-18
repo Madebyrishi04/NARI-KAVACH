@@ -9,6 +9,8 @@ import SafeRoute from "./SafeRoute";
 import Emergency from "./Emergency";
 import Contacts from "./Contacts";
 import Profile from "./Profile";
+import Analytics from "./Analytics";
+import NLPAssistant from "./NLPAssistant";
 
 import "./App.css";
 
@@ -216,10 +218,11 @@ function App() {
     ["Dashboard", "⌂"],
     ["Safety map", "⌖"],
     ["Safe route", "⌁"],
-    ["Emergency", "♙"],
-    ["Contacts", "♧"],
-    ["Analytics", "▥"],
-    ["Profile", "♙"],
+    ["AI Assistant", "⚡"],
+    ["Emergency", "🚨"],
+    ["Contacts", "👥"],
+    ["Analytics", "📊"],
+    ["Profile", "👤"],
   ];
 
   return (
@@ -487,10 +490,17 @@ function App() {
             <SafetyMap token={token} />
           ) : activeScreen === "Safe route" ? (
             <SafeRoute token={token} />
+          ) : activeScreen === "AI Assistant" ? (
+            <NLPAssistant
+              token={token}
+              onTriggerEmergency={() => setActiveScreen("Emergency")}
+            />
           ) : activeScreen === "Emergency" ? (
             <Emergency token={token} />
           ) : activeScreen === "Contacts" ? (
             <Contacts token={token} />
+          ) : activeScreen === "Analytics" ? (
+            <Analytics token={token} />
           ) : activeScreen === "Profile" ? (
             <Profile token={token} onLogout={handleLogout} />
           ) : (
