@@ -1,34 +1,73 @@
-
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Load environment variables
 load_dotenv()
 
-# Database URL with automatic SQLite fallback
 DATABASE_URL = os.getenv("DATABASE_URL")
 USE_SQLITE = os.getenv("USE_SQLITE", "false").lower() in ("true", "1")
-engine = None
+APP_ENV = os.getenv("APP_ENV", "development").lower()
 
-if not USE_SQLITE and DATABASE_URL and DATABASE_URL.startswith("postgresql"):
+# Explicit SQLite mode (local development)
+if USE_SQLITE:
+    DATABASE_URL = "sqlite:///./personal_safety.db"
+
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
+
+    print("[Database] Using SQLite.")
+
+# PostgreSQL mode (Railway deployment)
+elif DATABASE_URL:
+
+    # Normalize older PostgreSQL URL format
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace(
+            "postgres://", "postgresql://", 1
+        )
+
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"connect_timeout": 5}
+        if DATABASE_URL.startswith("postgresql")
+        else {}
+    )
+
+    # Verify database connection
     try:
-        from sqlalchemy import text
-        # Attempt connection with a short timeout
-        test_engine = create_engine(DATABASE_URL, connect_args={"connect_timeout": 2})
-        with test_engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
-        engine = test_engine
-        print("[Database] Successfully connected to PostgreSQL.")
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+
+        print("[Database] Successfully connected to the configured database.")
+
     except Exception as e:
-        print(f"[Database] PostgreSQL connection failed ({e}). Falling back to local SQLite.")
-        DATABASE_URL = "sqlite:///./personal_safety.db"
-        engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+        engine.dispose()
+        raise RuntimeError(
+            f"[Database] Database connection failed: {e}"
+        ) from e
+
+# Local fallback when no database URL is configured
+elif APP_ENV != "production":
+
+    DATABASE_URL = "sqlite:///./personal_safety.db"
+
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
+
+    print("[Database] Using local SQLite.")
+
+# Production must have a configured database
 else:
-    DATABASE_URL = DATABASE_URL if (DATABASE_URL and DATABASE_URL.startswith("sqlite")) else "sqlite:///./personal_safety.db"
-    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-    print(f"[Database] Using local SQLite database: {DATABASE_URL}")
+    raise RuntimeError(
+        "[Database] DATABASE_URL is missing in production."
+    )
+
 
 # Create database sessions
 SessionLocal = sessionmaker(
@@ -39,7 +78,10 @@ SessionLocal = sessionmaker(
 
 # Base class for database models
 Base = declarative_base()
+
 IS_SQLITE = DATABASE_URL.startswith("sqlite")
+
+
 def get_db():
     db = SessionLocal()
     try:
