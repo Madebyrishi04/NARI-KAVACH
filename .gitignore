@@ -23,7 +23,9 @@ dist-ssr/
 .vite-cache/
 
 #Python and downloaded data caches
-cache/
+cache/*
+!cache/f5ee5aa6b2ea712e57c1f25dc0b62a50b17b461a.json
+!cache/bhubaneswar_road_corridors.json
 
 # Logs and local files
 *.log

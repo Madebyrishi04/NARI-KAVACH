@@ -151,6 +151,24 @@ class TestOSMnxProvider(unittest.TestCase):
                 network_type="unsupported",
             )
 
+    def test_find_nearest_node(self):
+        from route_engine.graph.graph import Graph
+        from route_engine.graph.node import Node
+        from route_engine.road_network.osmnx_provider import find_nearest_node
+
+        graph = Graph()
+        graph.add_node(Node("N1", 20.350, 85.810))
+        graph.add_node(Node("N2", 20.360, 85.820))
+
+        nearest = find_nearest_node(graph, 20.351, 85.811)
+        self.assertEqual(nearest, "N1")
+
+        nearest2 = find_nearest_node(graph, 20.359, 85.819)
+        self.assertEqual(nearest2, "N2")
+
+        with self.assertRaises(ValueError):
+            find_nearest_node(Graph(), 20.0, 85.0)
+
 
 if __name__ == "__main__":
     unittest.main()

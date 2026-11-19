@@ -1,3 +1,16 @@
+import sys
+from pathlib import Path
+
+# Ensure Backend, Project Root, and ML are always in sys.path
+_CURRENT_FILE = Path(__file__).resolve()
+_BACKEND_DIR = _CURRENT_FILE.parents[1]
+_PROJECT_ROOT = _CURRENT_FILE.parents[2]
+_ML_DIR = _PROJECT_ROOT / "ML"
+
+for _p in [str(_BACKEND_DIR), str(_PROJECT_ROOT), str(_ML_DIR)]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text

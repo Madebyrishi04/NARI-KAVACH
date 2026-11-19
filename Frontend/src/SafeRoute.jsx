@@ -1,8 +1,23 @@
 import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./SafeRoute.css";
+
+function MapBoundsUpdater({ coordinates }) {
+  const map = useMap();
+  useEffect(() => {
+    if (coordinates && coordinates.length > 1) {
+      try {
+        const bounds = L.latLngBounds(coordinates);
+        map.fitBounds(bounds, { padding: [40, 40] });
+      } catch (e) {
+        console.warn("Could not fit map bounds:", e);
+      }
+    }
+  }, [coordinates, map]);
+  return null;
+}
 
 const API_URL = "http://127.0.0.1:8000";
 
@@ -27,12 +42,27 @@ const userIcon = L.divIcon({
   iconAnchor: [11, 11]
 });
 
+const ORIGIN_PRESETS = [
+  { name: "KIIT Campus 6 (Bhubaneswar)", latitude: 20.354563, longitude: 85.816109 },
+  { name: "Patia Chowk", latitude: 20.360120, longitude: 85.823450 },
+  { name: "Infocity / DLF Cybercity", latitude: 20.345800, longitude: 85.808900 },
+  { name: "Jayadev Vihar Overbridge", latitude: 20.298000, longitude: 85.823000 }
+];
+
+const DESTINATION_PRESETS = [
+  { name: "Bhubaneswar Railway Station", display_name: "Bhubaneswar Railway Station, Master Canteen, Khordha, Odisha", latitude: 20.2667774, longitude: 85.8435592 },
+  { name: "Esplanade One Mall", display_name: "Esplanade One Mall, Rasulgarh, Bhubaneswar, Odisha", latitude: 20.296500, longitude: 85.864000 },
+  { name: "Master Canteen Square", display_name: "Master Canteen Square, Janpath, Bhubaneswar, Odisha", latitude: 20.270000, longitude: 85.844000 },
+  { name: "AIIMS Bhubaneswar", display_name: "AIIMS Hospital, Sijua, Patrapada, Bhubaneswar, Odisha", latitude: 20.228500, longitude: 85.776500 }
+];
+
 function SafeRoute({ token }) {
   const [selectedRouteId, setSelectedRouteId] = useState("S");
   const [destinationQuery, setDestinationQuery] = useState("");
   const [destinations, setDestinations] = useState([]);
   const [selectedDestination, setSelectedDestination] = useState(null);
-  const [currentCoords, setCurrentCoords] = useState({ latitude: 28.6139, longitude: 77.2090 });
+  const [originName, setOriginName] = useState("KIIT Campus 6 (Bhubaneswar)");
+  const [currentCoords, setCurrentCoords] = useState({ latitude: 20.354563, longitude: 85.816109 });
 
   const [searching, setSearching] = useState(false);
   const [computingRoutes, setComputingRoutes] = useState(false);
@@ -53,15 +83,51 @@ function SafeRoute({ token }) {
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude
           });
+          setOriginName("My Live Location (GPS)");
         },
         () => {
-          // Default fallback to central coordinates
-          setCurrentCoords({ latitude: 28.6139, longitude: 77.2090 });
+          // Default fallback to project operations hub: KIIT Bhubaneswar
+          setCurrentCoords({ latitude: 20.354563, longitude: 85.816109 });
+          setOriginName("KIIT Campus 6 (Bhubaneswar)");
         },
-        { enableHighAccuracy: true, timeout: 10000 }
+        { enableHighAccuracy: true, timeout: 8000 }
       );
     }
   }, []);
+
+  const handleUseGps = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
+    }
+    setError("");
+    setMessage("Fetching live GPS coordinates...");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+        setCurrentCoords(coords);
+        setOriginName("My Live Location (GPS)");
+        setMessage("GPS location acquired.");
+        if (selectedDestination) {
+          calculateRoutesFor(coords, selectedDestination);
+        }
+      },
+      (err) => {
+        setError("Could not retrieve GPS location. Keeping current origin.");
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  const handleSelectOriginPreset = (preset) => {
+    const coords = { latitude: preset.latitude, longitude: preset.longitude };
+    setCurrentCoords(coords);
+    setOriginName(preset.name);
+    setError("");
+    if (selectedDestination) {
+      calculateRoutesFor(coords, selectedDestination);
+    }
+  };
 
   const searchDestinations = async () => {
     setError("");
@@ -95,8 +161,7 @@ function SafeRoute({ token }) {
     }
   };
 
-  const handleSelectDestination = async (dest) => {
-    setSelectedDestination(dest);
+  const calculateRoutesFor = async (sourceCoords, dest) => {
     setError("");
     setMessage("");
     setComputingRoutes(true);
@@ -106,8 +171,8 @@ function SafeRoute({ token }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          source_latitude: currentCoords.latitude,
-          source_longitude: currentCoords.longitude,
+          source_latitude: sourceCoords.latitude,
+          source_longitude: sourceCoords.longitude,
           destination_latitude: dest.latitude,
           destination_longitude: dest.longitude
         })
@@ -118,14 +183,25 @@ function SafeRoute({ token }) {
         throw new Error(data.detail || "Route optimization failed.");
       }
 
-      setComparedRoutes(data.routes || []);
-      setSelectedRouteId(data.recommended_route_id || "S");
-      setMessage("Routes successfully calculated and ranked by DSA route engine.");
+      if (data.routes && data.routes.length > 0) {
+        setComparedRoutes(data.routes);
+        setSelectedRouteId(data.recommended_route_id || data.routes[0].id);
+        setMessage("3 routes successfully calculated and ranked by DSA route engine: Safest, Balanced, and Fastest.");
+      } else {
+        setComparedRoutes([]);
+        setError("No navigable road path found between the selected origin and destination. Please choose locations within the city network.");
+      }
     } catch (err) {
       setError(err.message || "Could not calculate routes.");
+      setComparedRoutes([]);
     } finally {
       setComputingRoutes(false);
     }
+  };
+
+  const handleSelectDestination = (dest) => {
+    setSelectedDestination(dest);
+    calculateRoutesFor(currentCoords, dest);
   };
 
   const selectedRouteObj = comparedRoutes.find((r) => r.id === selectedRouteId) || comparedRoutes[0];
@@ -235,11 +311,68 @@ function SafeRoute({ token }) {
         </div>
       </header>
 
+      {/* Starting Location (Origin) Panel */}
+      <section className="route-details-panel">
+        <div className="route-explanation">
+          <p className="route-eyebrow">Step 1: Starting Point (Origin)</p>
+          <h3>Where are you starting from?</h3>
+        </div>
+
+        <div className="current-origin-card">
+          <div>
+            <strong>📍 {originName}</strong>
+            <span style={{ display: "block", color: "#64748b", fontSize: "12px", marginTop: "2px" }}>
+              Coordinates: {currentCoords.latitude.toFixed(6)}, {currentCoords.longitude.toFixed(6)}
+            </span>
+          </div>
+          <button
+            type="button"
+            className="preset-chip"
+            onClick={handleUseGps}
+            title="Use current GPS location"
+          >
+            📡 Use Live GPS
+          </button>
+        </div>
+
+        <div className="preset-chips-row">
+          <span style={{ fontSize: "12px", color: "#64748b", alignSelf: "center", marginRight: "4px" }}>
+            Quick Select Origin:
+          </span>
+          {ORIGIN_PRESETS.map((p, idx) => (
+            <button
+              key={idx}
+              type="button"
+              className={`preset-chip ${originName === p.name ? "active" : ""}`}
+              onClick={() => handleSelectOriginPreset(p)}
+            >
+              📍 {p.name}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Destination Search Box */}
       <section className="route-details-panel">
         <div className="route-explanation">
-          <p className="route-eyebrow">Step 1: Set Destination</p>
+          <p className="route-eyebrow">Step 2: Set Destination</p>
           <h3>Where are you traveling to?</h3>
+        </div>
+
+        <div className="preset-chips-row" style={{ marginBottom: "12px" }}>
+          <span style={{ fontSize: "12px", color: "#64748b", alignSelf: "center", marginRight: "4px" }}>
+            Quick Destinations:
+          </span>
+          {DESTINATION_PRESETS.map((dest, idx) => (
+            <button
+              key={idx}
+              type="button"
+              className={`preset-chip ${selectedDestination?.name === dest.name ? "active" : ""}`}
+              onClick={() => handleSelectDestination(dest)}
+            >
+              🎯 {dest.name}
+            </button>
+          ))}
         </div>
 
         <div className="destination-search-row">
@@ -248,7 +381,7 @@ function SafeRoute({ token }) {
             value={destinationQuery}
             onChange={(e) => setDestinationQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") searchDestinations(); }}
-            placeholder="Search destination (e.g. Connaught Place, Railway Station, City Mall)..."
+            placeholder="Search destination (e.g. Master Canteen, Railway Station, City Mall)..."
           />
           <button
             type="button"
@@ -339,12 +472,13 @@ function SafeRoute({ token }) {
               <div className="map-panel-header">
                 <div>
                   <h3>Interactive Route Visualization ({selectedRouteObj.name})</h3>
-                  <p>Segment-level risk breakdown: Green = Low Risk, Yellow = Moderate, Red = High Risk</p>
+                  <p>Segment-level risk breakdown: Green = Low Risk, Yellow = Moderate, Red = High Risk, Blue = Unassessed</p>
                 </div>
                 <div className="segment-legend">
                   <span><i style={{background: "#22c55e"}} /> Low Risk</span>
                   <span><i style={{background: "#eab308"}} /> Moderate</span>
                   <span><i style={{background: "#ef4444"}} /> High Risk</span>
+                  <span><i style={{background: "#3b82f6"}} /> Unassessed</span>
                 </div>
               </div>
 
@@ -360,6 +494,11 @@ function SafeRoute({ token }) {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
 
+                  {/* Auto-fit map viewport to active road route */}
+                  {selectedRouteObj.path_coordinates && (
+                    <MapBoundsUpdater coordinates={selectedRouteObj.path_coordinates} />
+                  )}
+
                   <Marker position={[currentCoords.latitude, currentCoords.longitude]} icon={originIcon}>
                     <Popup>Your Location (Origin)</Popup>
                   </Marker>
@@ -370,20 +509,50 @@ function SafeRoute({ token }) {
                     </Marker>
                   )}
 
-                  {/* Render color-coded segments */}
-                  {selectedRouteObj.segments && selectedRouteObj.segments.map((seg, sIdx) => (
+                  {/* Base smooth continuous road polyline */}
+                  {selectedRouteObj.path_coordinates && selectedRouteObj.path_coordinates.length > 1 && (
                     <Polyline
-                      key={sIdx}
-                      positions={[seg.start, seg.end]}
-                      pathOptions={{ color: seg.color || "#3b82f6", weight: 6, opacity: 0.85 }}
-                    >
-                      <Popup>
-                        Segment #{sIdx + 1}: {seg.distance_m}m
-                        <br />
-                        Risk: {seg.risk_score}/100 ({seg.risk_level})
-                      </Popup>
-                    </Polyline>
-                  ))}
+                      positions={selectedRouteObj.path_coordinates}
+                      pathOptions={{
+                        color: selectedRouteObj.color === "high" ? "#ef4444" : (selectedRouteObj.color === "medium" ? "#eab308" : "#22c55e"),
+                        weight: 6,
+                        opacity: 0.85,
+                        lineJoin: "round",
+                        lineCap: "round"
+                      }}
+                    />
+                  )}
+
+                  {/* Render real road-following geometry */}
+                  {selectedRouteObj.segments && selectedRouteObj.segments.map((seg, sIdx) => {
+                    const polyPositions = (seg.geometry && seg.geometry.length > 0)
+                      ? seg.geometry
+                      : [seg.start, seg.end];
+
+                    return (
+                      <Polyline
+                        key={sIdx}
+                        positions={polyPositions}
+                        pathOptions={{
+                          color: seg.color || "#22c55e",
+                          weight: 8,
+                          opacity: 0.9,
+                          lineJoin: "round",
+                          lineCap: "round"
+                        }}
+                      >
+                        <Popup>
+                          <strong>{seg.name || `Segment #${sIdx + 1}`}</strong> ({seg.distance_m}m)
+                          <br />
+                          Risk Assessment: {seg.risk_level === "UNASSESSED" ? "Low / Unassessed (No incident history)" : `${seg.risk_score}/100 (${seg.risk_level})`}
+                          <br />
+                          <small style={{ color: "#64748b" }}>
+                            Road-following OpenStreetMap geometry ({polyPositions.length} curve points)
+                          </small>
+                        </Popup>
+                      </Polyline>
+                    );
+                  })}
                 </MapContainer>
               </div>
 

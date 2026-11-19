@@ -4,25 +4,41 @@ import os
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 
-load_dotenv()
+from pathlib import Path
 
-smtp_email = os.getenv("SMTP_EMAIL")
-smtp_password = os.getenv("SMTP_APP_PASSWORD")
+BACKEND_DIR = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+ENV_FILE = BACKEND_DIR / ".env"
+if not ENV_FILE.exists():
+    ENV_FILE = PROJECT_ROOT / ".env"
 
-if not smtp_email or not smtp_password:
-    raise RuntimeError("SMTP_EMAIL or SMTP_APP_PASSWORD is missing from .env")
+if ENV_FILE.exists():
+    load_dotenv(dotenv_path=ENV_FILE)
+else:
+    load_dotenv()
 
-conf = ConnectionConfig(
-    MAIL_USERNAME=smtp_email,
-    MAIL_PASSWORD=smtp_password,
-    MAIL_FROM=smtp_email,
-    MAIL_PORT=465,
-    MAIL_SERVER="smtp.gmail.com",
-    MAIL_STARTTLS=False,
-    MAIL_SSL_TLS=True,
-    USE_CREDENTIALS=True,
-    VALIDATE_CERTS=True,
-)
+smtp_email = os.getenv("SMTP_EMAIL", "")
+smtp_password = os.getenv("SMTP_APP_PASSWORD", "")
+
+conf = None
+if smtp_email and smtp_password:
+    try:
+        conf = ConnectionConfig(
+            MAIL_USERNAME=smtp_email,
+            MAIL_PASSWORD=smtp_password,
+            MAIL_FROM=smtp_email,
+            MAIL_PORT=465,
+            MAIL_SERVER="smtp.gmail.com",
+            MAIL_STARTTLS=False,
+            MAIL_SSL_TLS=True,
+            USE_CREDENTIALS=True,
+            VALIDATE_CERTS=True,
+        )
+    except Exception as e:
+        print(f"[EmailService] Notice: Could not initialize email config: {e}")
+        conf = None
+else:
+    print("[EmailService] Warning: SMTP credentials not fully configured; email sending will be mocked or disabled.")
 
 
 async def send_password_reset_email(to_email: str, reset_link: str):
@@ -40,6 +56,10 @@ async def send_password_reset_email(to_email: str, reset_link: str):
         """,
         subtype=MessageType.html,
     )
+
+    if not conf:
+        print(f"[EmailService] Mocking password reset email to {to_email}: {reset_link}")
+        return
 
     mailer = FastMail(conf)
     await mailer.send_message(message)
@@ -95,6 +115,10 @@ async def send_sos_email(
         """,
         subtype=MessageType.html,
     )
+
+    if not conf:
+        print(f"[EmailService] Mocking password reset email to {to_email}: {reset_link}")
+        return
 
     mailer = FastMail(conf)
     await mailer.send_message(message)

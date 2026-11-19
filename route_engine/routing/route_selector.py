@@ -23,6 +23,7 @@ def select_route(
     mode: RoutingMode = RoutingMode.SHORTEST,
     weights: Optional[RoutingWeights] = None,
     distance_scale_m: float = 1000.0,
+    allow_unscored_fallback: bool = False,
 ) -> dict:
     """
     Find a route using the selected optimization mode.
@@ -132,11 +133,17 @@ def select_route(
 
                 if current_risk is None and predicted_risk is None:
                     incomplete_risk_data_encountered = True
-                    continue
+                    if not allow_unscored_fallback:
+                        continue
+                    edge_used_incomplete_risk = True
+                    edge_cost = (
+                        weights.distance * normalized_distance
+                        + (weights.current_risk + weights.predicted_risk) * 0.5
+                    )
 
                 # If only one score is available, use its weight
                 # and ignore the unavailable component.
-                if current_risk is None:
+                elif current_risk is None:
                     incomplete_risk_data_encountered = True
                     edge_used_incomplete_risk = True
 

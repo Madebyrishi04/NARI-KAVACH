@@ -577,3 +577,56 @@
   color: white;
 }
 
+/* Preset Location Chips & Origin Card */
+.preset-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.preset-chip {
+  background: #1e2638;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-chip:hover {
+  background: #2e3a55;
+  color: #f1f5f9;
+  border-color: #6366f1;
+  transform: translateY(-1px);
+}
+
+.preset-chip.active {
+  background: #312e81;
+  color: #e0e7ff;
+  border-color: #818cf8;
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.35);
+}
+
+.current-origin-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #cbd5e1;
+}
+
+.current-origin-card strong {
+  color: #38bdf8;
+  font-size: 15px;
+}
+
+

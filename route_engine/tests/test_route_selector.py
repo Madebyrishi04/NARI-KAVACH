@@ -367,6 +367,32 @@ class TestRouteSelector(unittest.TestCase):
         self.assertEqual(result["risk_data_status"], "incomplete")
         self.assertTrue(result["used_risk_fallback"])
 
+    def test_safest_mode_with_unscored_fallback(self):
+        """When all edges lack risk data, allow_unscored_fallback should still find a valid path."""
+        graph = Graph()
+        graph.add_node(Node("A", 20.0, 85.0))
+        graph.add_node(Node("B", 20.1, 85.1))
+        graph.add_edge("A", Edge(
+            segment_id="seg_A_B",
+            destination="B",
+            distance_m=100,
+            travel_time_s=10,
+            current_risk=None,
+            predicted_risk=None,
+        ))
+
+        weights = RoutingWeights(distance=1.0, current_risk=1.0, predicted_risk=1.0)
+
+        # Without fallback: no path found
+        res_no_fallback = select_route(graph, "A", "B", mode=RoutingMode.SAFEST, weights=weights, allow_unscored_fallback=False)
+        self.assertEqual(res_no_fallback["path"], [])
+
+        # With fallback: path found and flagged incomplete
+        res_fallback = select_route(graph, "A", "B", mode=RoutingMode.SAFEST, weights=weights, allow_unscored_fallback=True)
+        self.assertEqual(res_fallback["path"], ["A", "B"])
+        self.assertEqual(res_fallback["risk_data_status"], "incomplete")
+        self.assertTrue(res_fallback["used_risk_fallback"])
+
     # ---------------------------------------------------------
     # VALIDATION TESTS
     # ---------------------------------------------------------
