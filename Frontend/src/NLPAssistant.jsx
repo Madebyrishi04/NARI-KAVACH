@@ -86,12 +86,14 @@ function NLPAssistant({ token, onTriggerEmergency }) {
   return (
     <div className="nlp-assistant-page">
       <header className="nlp-header">
-        <div>
-          <h2>AI Safety Assistant (NLP)</h2>
-          <p>Real-time distress classification using fine-tuned Hugging Face DistilBERT</p>
+        <div className="nlp-header-title">
+          <h1 className="nlp-title">
+            AI Safety Assistant <span className="nlp-title-accent">(NLP)</span>
+          </h1>
         </div>
-        <div className="nlp-badge">
+        <div className="nlp-badge" aria-label="Shield Transformer Active">
           <span>Shield Transformer Active</span>
+          <span className="nlp-status-dot" aria-hidden="true" />
         </div>
       </header>
 
