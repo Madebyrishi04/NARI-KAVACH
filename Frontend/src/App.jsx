@@ -22,10 +22,10 @@ import Contacts from "./Contacts";
 import Profile from "./Profile";
 import Analytics from "./Analytics";
 import NLPAssistant from "./NLPAssistant";
+import { API_BASE_URL as API_URL } from "./apiConfig";
 
 import "./App.css";
 
-const API_URL = "http://127.0.0.1:8000";
 const IDLE_TIMEOUT_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 function getInitialSessionToken() {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { API_BASE_URL as API_URL } from "./apiConfig";
 import "./SafeRoute.css";
 
 function MapBoundsUpdater({ coordinates }) {
@@ -18,8 +19,6 @@ function MapBoundsUpdater({ coordinates }) {
   }, [coordinates, map]);
   return null;
 }
-
-const API_URL = "http://127.0.0.1:8000";
 
 const originIcon = L.divIcon({
   className: "custom-map-icon",

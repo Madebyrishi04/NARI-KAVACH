@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "./apiConfig";
 
 function AlertHistory({ token }) {
   const [alerts, setAlerts] = useState([]);
@@ -11,7 +12,7 @@ function AlertHistory({ token }) {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/sos/history",
+        `${API_BASE_URL}/sos/history`,
         {
           method: "GET",
           headers: {
@@ -39,7 +40,7 @@ function AlertHistory({ token }) {
   const resolveAlert = async (alertId) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/sos/resolve/${alertId}`,
+        `${API_BASE_URL}/sos/resolve/${alertId}`,
         {
           method: "PUT",
           headers: {

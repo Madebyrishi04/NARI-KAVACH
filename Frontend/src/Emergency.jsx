@@ -1,8 +1,7 @@
 
 import { useState } from "react";
+import { API_BASE_URL as API_URL } from "./apiConfig";
 import "./Emergency.css";
-
-const API_URL = "http://127.0.0.1:8000";
 
 function Emergency({ token }) {
   const [confirming, setConfirming] = useState(false);

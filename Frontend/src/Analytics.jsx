@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL as API_URL } from "./apiConfig";
 import "./Analytics.css";
-
-const API_URL = "http://127.0.0.1:8000";
 
 function Analytics({ token }) {
   const [overview, setOverview] = useState(null);

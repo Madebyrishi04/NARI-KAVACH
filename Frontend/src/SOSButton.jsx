@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { API_BASE_URL } from "./apiConfig";
 
 function SOSButton({ token }) {
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ function SOSButton({ token }) {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/sos/trigger",
+        `${API_BASE_URL}/sos/trigger`,
         {
           method: "POST",
           headers: {

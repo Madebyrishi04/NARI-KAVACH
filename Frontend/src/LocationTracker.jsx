@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { API_BASE_URL } from "./apiConfig";
 
 function LocationTracker({ token }) {
   const [location, setLocation] = useState(null);
@@ -28,7 +29,7 @@ function LocationTracker({ token }) {
 
         try {
           const response = await fetch(
-            "http://127.0.0.1:8000/locations/",
+            `${API_BASE_URL}/locations/`,
             {
               method: "POST",
               headers: {

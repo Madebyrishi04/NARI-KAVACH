@@ -1,8 +1,7 @@
 
 import { useEffect, useState } from "react";
+import { API_BASE_URL as API_URL } from "./apiConfig";
 import "./Profile.css";
-
-const API_URL = "http://127.0.0.1:8000";
 
 function Profile({ token, onLogout }) {
   const [user, setUser] = useState({

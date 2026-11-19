@@ -10,6 +10,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { HeatLayer } from "leaflet.heat";
+import { API_BASE_URL } from "./apiConfig";
 import "./SafetyMap.css";
 
 // Ensure global Leaflet instance is available if any plugin expects window.L
@@ -260,7 +261,7 @@ function SafetyMapContent({ token }) {
         }
 
         const response = await fetch(
-          `http://127.0.0.1:8000/safety-reports/nearby?${params}`,
+          `${API_BASE_URL}/safety-reports/nearby?${params}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -326,7 +327,7 @@ function SafetyMapContent({ token }) {
         }
 
         const response = await fetch(
-          `http://127.0.0.1:8000/safety-reports/risk-zones?${params}`,
+          `${API_BASE_URL}/safety-reports/risk-zones?${params}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -459,7 +460,7 @@ function SafetyMapContent({ token }) {
     setReportSuccess("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/safety-reports/", {
+      const response = await fetch(`${API_BASE_URL}/safety-reports/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

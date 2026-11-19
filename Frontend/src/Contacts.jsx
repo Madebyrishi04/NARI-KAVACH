@@ -1,8 +1,9 @@
 
 import { useCallback, useEffect, useState } from "react";
+import { API_BASE_URL } from "./apiConfig";
 import "./Contacts.css";
 
-const API_URL = "http://127.0.0.1:8000/emergency-contacts/";
+const API_URL = `${API_BASE_URL}/emergency-contacts/`;
 
 function Contacts({ token }) {
   const [contacts, setContacts] = useState([]);
