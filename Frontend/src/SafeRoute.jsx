@@ -61,6 +61,11 @@ function SafeRoute({ token }) {
   const [destinationQuery, setDestinationQuery] = useState("");
   const [destinations, setDestinations] = useState([]);
   const [selectedDestination, setSelectedDestination] = useState(null);
+
+  // Origin management
+  const [originQuery, setOriginQuery] = useState("");
+  const [origins, setOrigins] = useState([]);
+  const [searchingOrigin, setSearchingOrigin] = useState(false);
   const [originName, setOriginName] = useState("KIIT Campus 6 (Bhubaneswar)");
   const [currentCoords, setCurrentCoords] = useState({ latitude: 20.354563, longitude: 85.816109 });
 
@@ -73,6 +78,7 @@ function SafeRoute({ token }) {
   const [comparedRoutes, setComparedRoutes] = useState([]);
   const [activeJourney, setActiveJourney] = useState(null);
   const [deviationAlert, setDeviationAlert] = useState(null);
+  const [showNavModal, setShowNavModal] = useState(false);
 
   // Attempt to get user GPS coordinates on mount
   useEffect(() => {
@@ -107,6 +113,8 @@ function SafeRoute({ token }) {
         const coords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
         setCurrentCoords(coords);
         setOriginName("My Live Location (GPS)");
+        setOrigins([]);
+        setOriginQuery("");
         setMessage("GPS location acquired.");
         if (selectedDestination) {
           calculateRoutesFor(coords, selectedDestination);
@@ -123,6 +131,51 @@ function SafeRoute({ token }) {
     const coords = { latitude: preset.latitude, longitude: preset.longitude };
     setCurrentCoords(coords);
     setOriginName(preset.name);
+    setOrigins([]);
+    setOriginQuery("");
+    setError("");
+    if (selectedDestination) {
+      calculateRoutesFor(coords, selectedDestination);
+    }
+  };
+
+  const searchOrigins = async () => {
+    setError("");
+    setMessage("");
+    setOrigins([]);
+
+    const query = originQuery.trim();
+    if (query.length < 2) {
+      setError("Please type at least 2 characters for starting point search.");
+      return;
+    }
+
+    setSearchingOrigin(true);
+    try {
+      const response = await fetch(
+        `${API_URL}/destinations/search?q=${encodeURIComponent(query)}`
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || "Could not search for this starting point.");
+      }
+      setOrigins(data);
+      if (data.length === 0) {
+        setMessage("No starting places found matching your query. Try a city, street, or landmark.");
+      }
+    } catch (err) {
+      setError(err.message || "Origin search failed.");
+    } finally {
+      setSearchingOrigin(false);
+    }
+  };
+
+  const handleSelectOrigin = (orig) => {
+    const coords = { latitude: orig.latitude, longitude: orig.longitude };
+    setCurrentCoords(coords);
+    setOriginName(orig.name || orig.display_name);
+    setOrigins([]);
+    setOriginQuery(orig.name || "");
     setError("");
     if (selectedDestination) {
       calculateRoutesFor(coords, selectedDestination);
@@ -174,7 +227,8 @@ function SafeRoute({ token }) {
           source_latitude: sourceCoords.latitude,
           source_longitude: sourceCoords.longitude,
           destination_latitude: dest.latitude,
-          destination_longitude: dest.longitude
+          destination_longitude: dest.longitude,
+          hour: new Date().getHours()
         })
       });
 
@@ -251,10 +305,35 @@ function SafeRoute({ token }) {
         destination: selectedDestination
       });
       setMessage("🛡️ Safety Journey Active! Real-time route deviation monitoring enabled.");
+      
+      // Prompt app chooser / redirect to Google Maps
+      handleOpenNavigation(selectedDestination);
     } catch (err) {
       setError(err.message || "Failed to start safety journey.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOpenNavigation = (dest = selectedDestination) => {
+    if (!dest) return;
+    setShowNavModal(true);
+
+    const isAndroid = /Android/i.test(navigator.userAgent || "");
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${currentCoords.latitude},${currentCoords.longitude}&destination=${dest.latitude},${dest.longitude}&travelmode=driving`;
+
+    if (isAndroid) {
+      // On Android devices, geo: intent triggers the native "Complete action using" app picker
+      const label = encodeURIComponent(dest.name || "Destination");
+      const geoUrl = `geo:${dest.latitude},${dest.longitude}?q=${dest.latitude},${dest.longitude}(${label})`;
+      window.location.href = geoUrl;
+    } else {
+      // On desktop / other browsers, open Google Maps turn-by-turn in a new tab
+      try {
+        window.open(googleMapsUrl, "_blank", "noopener,noreferrer");
+      } catch (e) {
+        console.warn("Could not auto-open Google Maps tab:", e);
+      }
     }
   };
 
@@ -307,7 +386,6 @@ function SafeRoute({ token }) {
       <header className="safe-route-heading">
         <div>
           <h2>Intelligent Safe Routing & Journey Monitor</h2>
-          <p>DSA-powered multi-objective route optimization integrated with ML Spatio-Temporal Risk</p>
         </div>
       </header>
 
@@ -327,15 +405,15 @@ function SafeRoute({ token }) {
           </div>
           <button
             type="button"
-            className="preset-chip"
+            className={`preset-chip ${originName.includes("Live Location") ? "active" : ""}`}
             onClick={handleUseGps}
-            title="Use current GPS location"
+            title="Use current GPS live location"
           >
             📡 Use Live GPS
           </button>
         </div>
 
-        <div className="preset-chips-row">
+        <div className="preset-chips-row" style={{ marginTop: "12px", marginBottom: "12px" }}>
           <span style={{ fontSize: "12px", color: "#64748b", alignSelf: "center", marginRight: "4px" }}>
             Quick Select Origin:
           </span>
@@ -350,6 +428,41 @@ function SafeRoute({ token }) {
             </button>
           ))}
         </div>
+
+        <div className="destination-search-row">
+          <input
+            type="text"
+            value={originQuery}
+            onChange={(e) => setOriginQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") searchOrigins(); }}
+            placeholder="Search starting place (e.g. KIIT University, Airport, Nayapalli, Patia)..."
+          />
+          <button
+            type="button"
+            className="start-route-button"
+            onClick={searchOrigins}
+            disabled={searchingOrigin}
+          >
+            {searchingOrigin ? "Searching..." : "🔍 Find Origin"}
+          </button>
+        </div>
+
+        {origins.length > 0 && (
+          <div className="destination-results">
+            <p className="destination-results-heading">Select Place to Set Starting Point:</p>
+            {origins.slice(0, 4).map((orig, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`destination-result ${originName === orig.name ? "selected" : ""}`}
+                onClick={() => handleSelectOrigin(orig)}
+              >
+                <strong>{orig.name}</strong>
+                <span>{orig.display_name}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Destination Search Box */}
@@ -582,11 +695,23 @@ function SafeRoute({ token }) {
                 ) : (
                   <div className="active-journey-box">
                     <div className="journey-live-status">
-                      <span className="live-pulse" />
-                      <strong>Safety Journey Active — Live Path Monitoring</strong>
-                      <button type="button" className="end-journey-btn" onClick={handleEndJourney}>
-                        End Journey
-                      </button>
+                      <div className="journey-live-title">
+                        <span className="live-pulse" />
+                        <strong>Safety Journey Active — Live Path Monitoring</strong>
+                      </div>
+                      <div className="journey-live-actions">
+                        <button
+                          type="button"
+                          className="open-maps-btn"
+                          onClick={() => handleOpenNavigation(selectedDestination)}
+                          title="Open Turn-by-Turn Navigation in Google Maps / Navigation App"
+                        >
+                          🗺️ Open in Google Maps
+                        </button>
+                        <button type="button" className="end-journey-btn" onClick={handleEndJourney}>
+                          End Journey
+                        </button>
+                      </div>
                     </div>
 
                     <div className="simulate-deviation-row">
@@ -646,6 +771,108 @@ function SafeRoute({ token }) {
             </section>
           )}
         </>
+      )}
+
+      {/* Navigation App Chooser Modal ("Complete action using") */}
+      {showNavModal && selectedDestination && (
+        <div className="nav-modal-backdrop" onClick={() => setShowNavModal(false)}>
+          <div className="nav-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="nav-modal-header">
+              <div className="nav-modal-title">
+                <span className="nav-modal-icon">🧭</span>
+                <div>
+                  <h4>Complete Action Using</h4>
+                  <p>Select your preferred app for live turn-by-turn navigation</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="close-btn"
+                onClick={() => setShowNavModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="nav-modal-dest">
+              <span className="nav-dest-label">Destination</span>
+              <strong>{selectedDestination.name}</strong>
+              <small>{selectedDestination.display_name}</small>
+            </div>
+
+            <div className="nav-app-options">
+              <a
+                href={
+                  selectedDestination
+                    ? `https://www.google.com/maps/dir/?api=1&origin=${currentCoords.latitude},${currentCoords.longitude}&destination=${selectedDestination.latitude},${selectedDestination.longitude}&travelmode=driving`
+                    : "#"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-app-card google-maps"
+                onClick={() => setShowNavModal(false)}
+              >
+                <div className="nav-app-logo">🗺️</div>
+                <div className="nav-app-info">
+                  <strong>Google Maps</strong>
+                  <span>Turn-by-turn driving, cycling, and walking navigation</span>
+                </div>
+                <span className="nav-app-chip">Open App ↗</span>
+              </a>
+
+              <a
+                href={
+                  selectedDestination
+                    ? `geo:${selectedDestination.latitude},${selectedDestination.longitude}?q=${selectedDestination.latitude},${selectedDestination.longitude}(${encodeURIComponent(selectedDestination.name || "Destination")})`
+                    : "#"
+                }
+                className="nav-app-card system-maps"
+                onClick={() => setShowNavModal(false)}
+              >
+                <div className="nav-app-logo">📱</div>
+                <div className="nav-app-info">
+                  <strong>Phone Navigation App</strong>
+                  <span>Triggers phone's native app picker (Waze, Maps, Ride apps)</span>
+                </div>
+                <span className="nav-app-chip">Choose App ↗</span>
+              </a>
+
+              {/iPhone|iPad|iPod/i.test(navigator.userAgent || "") && (
+                <a
+                  href={
+                    selectedDestination
+                      ? `https://maps.apple.com/?saddr=${currentCoords.latitude},${currentCoords.longitude}&daddr=${selectedDestination.latitude},${selectedDestination.longitude}&dirflg=d`
+                      : "#"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-app-card apple-maps"
+                  onClick={() => setShowNavModal(false)}
+                >
+                  <div className="nav-app-logo">🍏</div>
+                  <div className="nav-app-info">
+                    <strong>Apple Maps</strong>
+                    <span>Open directly in Apple Maps</span>
+                  </div>
+                  <span className="nav-app-chip">Open ↗</span>
+                </a>
+              )}
+            </div>
+
+            <div className="nav-modal-footer">
+              <span className="nav-bg-note">
+                🛡️ <strong>NARI-KAVACH</strong> is actively monitoring your route in the background. If you stray from safe roads, alerts will trigger.
+              </span>
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={() => setShowNavModal(false)}
+              >
+                Keep in Background & Continue
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
