@@ -204,6 +204,50 @@ class TestBackendIntegration(unittest.TestCase):
                 self.assertIn("geometry", seg)
                 self.assertGreaterEqual(len(seg["geometry"]), 2)
 
+    def test_13_live_dashboard_endpoint(self):
+        """GET /dashboard/live returns dynamic risk, predictive diurnal forecast, POIs and routes."""
+        self.assertIsNotNone(self.token)
+        r = self.client.get(
+            "/dashboard/live?latitude=20.354563&longitude=85.816109",
+            headers={"Authorization": f"Bearer {self.token}"}
+        )
+        self.assertEqual(r.status_code, 200)
+        data = r.json()
+
+        # Check user profile
+        self.assertEqual(data.get("user_name"), "Integration Test User")
+
+        # Check current dynamic risk
+        self.assertIn("current_risk", data)
+        self.assertIn("score", data["current_risk"])
+        self.assertIn("level", data["current_risk"])
+        self.assertIn("color", data["current_risk"])
+        self.assertIn(data["current_risk"]["level"], ["LOW", "MEDIUM", "HIGH"])
+
+        # Check 5-hour predictive forecast
+        self.assertIn("prediction", data)
+        self.assertEqual(len(data["prediction"]["labels"]), 5)
+        self.assertEqual(len(data["prediction"]["scores"]), 5)
+        self.assertIn("svg_points", data["prediction"])
+        self.assertIn("peak_hour", data["prediction"])
+
+        # Check recommended route
+        self.assertIn("recommended_route", data)
+        self.assertIn("source", data["recommended_route"])
+        self.assertIn("destination", data["recommended_route"])
+        self.assertIn("risk_score", data["recommended_route"])
+
+        # Check nearby emergency services
+        self.assertIn("nearby_services", data)
+        self.assertIn("police_station", data["nearby_services"])
+        self.assertIn("hospital", data["nearby_services"])
+        self.assertIn("distance", data["nearby_services"]["police_station"])
+        self.assertIn("distance", data["nearby_services"]["hospital"])
+        self.assertIn("trusted_contacts_count", data["nearby_services"])
+
+        # Check recent activity list
+        self.assertIn("recent_activity", data)
+        self.assertIsInstance(data["recent_activity"], list)
 
 
 if __name__ == "__main__":

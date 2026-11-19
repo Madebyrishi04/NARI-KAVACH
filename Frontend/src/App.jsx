@@ -26,6 +26,7 @@ function App() {
   const [trustedContactsCount, setTrustedContactsCount] = useState(0);
   const [recentActivity, setRecentActivity] = useState([]);
   const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState(null);
 
   const handleLogin = (accessToken) => {
     localStorage.setItem("access_token", accessToken);
@@ -39,6 +40,7 @@ function App() {
     setUserName("");
     setTrustedContactsCount(0);
     setRecentActivity([]);
+    setDashboardData(null);
   };
 
   // Handle password pages before showing the login page.
@@ -56,7 +58,7 @@ function App() {
     return <ForgotPassword />;
   }
 
-  // Load dashboard information after login.
+  // Load live dynamic dashboard information after login.
   useEffect(() => {
     if (!token) {
       setDashboardLoading(false);
@@ -69,143 +71,90 @@ function App() {
       Authorization: `Bearer ${token}`,
     };
 
-    async function loadDashboard() {
-      setDashboardLoading(true);
+    async function loadDashboard(isInitial = false) {
+      if (isInitial) {
+        setDashboardLoading(true);
+      }
 
       try {
-        const results = await Promise.allSettled([
-          fetch(`${API_URL}/users/me`, { headers }),
-          fetch(`${API_URL}/emergency-contacts/`, { headers }),
-          fetch(`${API_URL}/sos/history`, { headers }),
-          fetch(`${API_URL}/safety-reports/`, { headers }),
-        ]);
+        let lat = 20.354563;
+        let lon = 85.816109;
 
-        if (cancelled) return;
-
-        const [
-          userResult,
-          contactsResult,
-          sosResult,
-          reportsResult,
-        ] = results;
-
-        // Load user information.
-        if (
-          userResult.status === "fulfilled" &&
-          userResult.value.ok
-        ) {
-          const user = await userResult.value.json();
-
-          if (cancelled) return;
-
-          setUserName(
-            user.full_name ||
-              user.name ||
-              user.username ||
-              user.email?.split("@")[0] ||
-              ""
-          );
-        }
-
-        // Load trusted contacts.
-        if (
-          contactsResult.status === "fulfilled" &&
-          contactsResult.value.ok
-        ) {
-          const data = await contactsResult.value.json();
-
-          if (cancelled) return;
-
-          const contacts = Array.isArray(data)
-            ? data
-            : data.contacts || data.items || [];
-
-          setTrustedContactsCount(
-            Array.isArray(contacts) ? contacts.length : 0
-          );
-        }
-
-        // Load recent SOS alerts and safety reports.
-        const activities = [];
-
-        if (
-          sosResult.status === "fulfilled" &&
-          sosResult.value.ok
-        ) {
-          const data = await sosResult.value.json();
-
-          const alerts = Array.isArray(data)
-            ? data
-            : data.alerts || data.items || data.history || [];
-
-          if (Array.isArray(alerts)) {
-            alerts.forEach((alert) => {
-              activities.push({
-                id: `sos-${alert.id}`,
-                title: "SOS alert",
-                description: `Status: ${
-                  alert.status ||
-                  (alert.resolved ? "Resolved" : "Recorded")
-                }`,
-                time:
-                  alert.created_at ||
-                  alert.triggered_at ||
-                  alert.timestamp ||
-                  null,
-                type: "sos",
+        if (typeof window !== "undefined" && "geolocation" in navigator) {
+          try {
+            const pos = await new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, {
+                timeout: 3000,
+                maximumAge: 60000,
               });
             });
-          }
-        }
-
-        if (
-          reportsResult.status === "fulfilled" &&
-          reportsResult.value.ok
-        ) {
-          const data = await reportsResult.value.json();
-
-          const reports = Array.isArray(data)
-            ? data
-            : data.reports || data.items || [];
-
-          if (Array.isArray(reports)) {
-            reports.forEach((report) => {
-              activities.push({
-                id: `report-${report.id}`,
-                title: "Safety report submitted",
-                description:
-                  report.description ||
-                  report.title ||
-                  "A safety report was recorded.",
-                time: report.created_at || report.timestamp || null,
-                type: "report",
-              });
-            });
+            if (pos && pos.coords) {
+              lat = pos.coords.latitude;
+              lon = pos.coords.longitude;
+            }
+          } catch (e) {
+            // Use default coordinates if permission not granted
           }
         }
 
         if (cancelled) return;
 
-        activities.sort((a, b) => {
-          const timeA = a.time ? new Date(a.time).getTime() : 0;
-          const timeB = b.time ? new Date(b.time).getTime() : 0;
-          return timeB - timeA;
-        });
+        const liveRes = await fetch(
+          `${API_URL}/dashboard/live?latitude=${lat}&longitude=${lon}`,
+          { headers }
+        );
 
-        setRecentActivity(activities.slice(0, 4));
+        if (cancelled) return;
+
+        if (liveRes.ok) {
+          const liveData = await liveRes.json();
+          if (cancelled) return;
+
+          setDashboardData(liveData);
+          if (liveData.user_name) {
+            setUserName(liveData.user_name);
+          }
+          if (liveData.nearby_services?.trusted_contacts_count !== undefined) {
+            setTrustedContactsCount(
+              liveData.nearby_services.trusted_contacts_count
+            );
+          }
+          if (Array.isArray(liveData.recent_activity)) {
+            setRecentActivity(liveData.recent_activity);
+          }
+        } else {
+          // Fallback to basic me endpoint if live dashboard fails
+          const userRes = await fetch(`${API_URL}/users/me`, { headers });
+          if (userRes.ok && !cancelled) {
+            const user = await userRes.json();
+            setUserName(
+              user.full_name ||
+                user.name ||
+                user.username ||
+                user.email?.split("@")[0] ||
+                ""
+            );
+          }
+        }
       } catch (error) {
-        console.error("Dashboard loading failed:", error);
+        console.error("Live dashboard loading failed:", error);
       } finally {
-        if (!cancelled) {
+        if (!cancelled && isInitial) {
           setDashboardLoading(false);
         }
       }
     }
 
-    loadDashboard();
+    loadDashboard(true);
+
+    // Live refresh every 30 seconds
+    const intervalId = setInterval(() => {
+      loadDashboard(false);
+    }, 30000);
 
     return () => {
       cancelled = true;
+      clearInterval(intervalId);
     };
   }, [token]);
 
@@ -337,9 +286,14 @@ function App() {
                     </span>
                   </button>
 
-                  <div className="risk-level">
+                  <div
+                    className={`risk-level ${
+                      dashboardData?.current_risk?.color || "low"
+                    }`}
+                  >
                     <span></span>
-                    34&nbsp; · &nbsp;MEDIUM
+                    {dashboardData?.current_risk?.score ?? 15}&nbsp; · &nbsp;
+                    {dashboardData?.current_risk?.level || "LOW"}
                   </div>
                 </div>
 
@@ -378,42 +332,79 @@ function App() {
                       />
 
                       <polyline
-                        points="0,125 90,123 180,120 270,112 360,94 450,70 540,55 620,50 700,47"
+                        points={
+                          dashboardData?.prediction?.svg_points ||
+                          "0,140 175,139 350,138 525,136 700,134"
+                        }
                         className="risk-line"
                       />
                     </svg>
 
                     <div className="chart-times">
-                      <span>7pm</span>
-                      <span>8pm</span>
-                      <span>9pm</span>
-                      <span>10pm</span>
-                      <span>11pm</span>
+                      {(
+                        dashboardData?.prediction?.labels || [
+                          "1pm",
+                          "2pm",
+                          "3pm",
+                          "4pm",
+                          "5pm",
+                        ]
+                      ).map((label, idx) => (
+                        <span key={idx}>{label}</span>
+                      ))}
                     </div>
                   </div>
 
                   <p className="chart-note">
-                    Forecast estimate — not a guarantee.
+                    {dashboardData?.prediction
+                      ? `Forecast estimate · Peak around ${dashboardData.prediction.peak_hour} (${dashboardData.prediction.trend.toLowerCase()} trend).`
+                      : "Forecast estimate — not a guarantee."}
                   </p>
                 </div>
               </section>
 
               <section className="middle-dashboard">
-                <div className="dashboard-card info-card">
-                  <p className="card-label">Recommended route</p>
+                <div
+                  className="dashboard-card info-card interactive-card"
+                  onClick={() => setActiveScreen("Safe route")}
+                  title="Click to view full Safe Route navigation"
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p className="card-label">Recommended route</p>
+                    <span style={{ fontSize: "11px", color: "#7164ff" }}>
+                      Open map →
+                    </span>
+                  </div>
 
                   <h2>
-                    Home <span>→</span> Metro station
+                    {dashboardData?.recommended_route?.source || "KIIT Campus 6"}{" "}
+                    <span>→</span>{" "}
+                    {dashboardData?.recommended_route?.destination || "Patia Chowk"}
                   </h2>
 
                   <div className="route-info">
-                    <span>4.8 km</span>
-                    <span>15 min</span>
+                    <span>
+                      {dashboardData?.recommended_route?.distance || "1.4 km"}
+                    </span>
+                    <span>
+                      {dashboardData?.recommended_route?.duration || "3 min"}
+                    </span>
                   </div>
 
-                  <div className="safety-badge low">
+                  <div
+                    className={`safety-badge ${
+                      dashboardData?.recommended_route?.color || "low"
+                    }`}
+                  >
                     <span></span>
-                    27&nbsp; · &nbsp;LOW
+                    {dashboardData?.recommended_route?.risk_score ?? 15}&nbsp; · &nbsp;
+                    {dashboardData?.recommended_route?.risk_level || "LOW"}
                   </div>
                 </div>
 
@@ -422,21 +413,48 @@ function App() {
 
                   <div className="service-row">
                     <span className="service-icon">⌖</span>
-                    <span>Police station</span>
-                    <span className="distance">—</span>
+                    <div className="service-name-container">
+                      <span>
+                        {dashboardData?.nearby_services?.police_station?.name ||
+                          "Police station"}
+                      </span>
+                    </div>
+                    <span className="distance">
+                      {dashboardData?.nearby_services?.police_station?.distance ||
+                        "—"}
+                    </span>
                   </div>
 
                   <div className="service-row">
                     <span className="service-icon">+</span>
-                    <span>Hospital</span>
-                    <span className="distance">—</span>
+                    <div className="service-name-container">
+                      <span>
+                        {dashboardData?.nearby_services?.hospital?.name ||
+                          "Hospital"}
+                      </span>
+                    </div>
+                    <span className="distance">
+                      {dashboardData?.nearby_services?.hospital?.distance ||
+                        "—"}
+                    </span>
                   </div>
 
-                  <div className="service-row">
+                  <div
+                    className="service-row interactive"
+                    onClick={() => setActiveScreen("Contacts")}
+                    style={{ cursor: "pointer" }}
+                    title="Manage Emergency Contacts"
+                  >
                     <span className="service-icon">♧</span>
                     <span>Trusted contacts</span>
                     <span className="distance">
-                      {trustedContactsCount}
+                      {dashboardData?.nearby_services?.trusted_contacts_count ??
+                        trustedContactsCount}
+                      {(dashboardData?.nearby_services
+                        ?.trusted_contacts_count ??
+                        trustedContactsCount) === 0
+                        ? " (+ Add)"
+                        : ""}
                     </span>
                   </div>
                 </div>
@@ -444,43 +462,55 @@ function App() {
                 <div className="dashboard-card info-card">
                   <p className="card-label">Recent activity</p>
 
-                  {dashboardLoading ? (
+                  {dashboardLoading && !dashboardData ? (
                     <p className="activity">
                       Loading recent activity...
                     </p>
-                  ) : recentActivity.length === 0 ? (
+                  ) : (dashboardData?.recent_activity?.length ??
+                      recentActivity.length) === 0 ? (
                     <p className="activity">
                       No recent SOS alerts or safety reports found.
                     </p>
                   ) : (
                     <div className="dashboard-activity-list">
-                      {recentActivity.map((item) => (
-                        <div
-                          className="dashboard-activity-item"
-                          key={item.id}
-                        >
-                          <span
-                            className={`activity-dot ${
-                              item.type === "sos"
-                                ? "activity-sos"
-                                : "activity-report"
-                            }`}
-                          />
+                      {(dashboardData?.recent_activity || recentActivity)
+                        .slice(0, 3)
+                        .map((item) => (
+                          <div
+                            className="dashboard-activity-item"
+                            key={item.id}
+                          >
+                            <span
+                              className={`activity-dot ${
+                                item.type === "sos"
+                                  ? "activity-sos"
+                                  : "activity-report"
+                              }`}
+                            />
 
-                          <div className="dashboard-activity-content">
-                            <strong>{item.title}</strong>
-                            <p>{item.description}</p>
-                            <small>
-                              {item.time &&
-                              !Number.isNaN(
-                                new Date(item.time).getTime()
-                              )
-                                ? new Date(item.time).toLocaleString()
-                                : "Time unavailable"}
-                            </small>
+                            <div className="dashboard-activity-content">
+                              <strong>{item.title}</strong>
+                              <p>{item.description}</p>
+                              <small>
+                                {item.time &&
+                                !Number.isNaN(
+                                  new Date(item.time).getTime()
+                                )
+                                  ? new Date(
+                                      item.time
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    }) +
+                                    " · " +
+                                    new Date(
+                                      item.time
+                                    ).toLocaleDateString()
+                                  : "Recent"}
+                              </small>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   )}
                 </div>

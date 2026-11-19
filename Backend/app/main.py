@@ -41,6 +41,7 @@ from app.routers.destination import router as destination_router
 from app.routers.ml_risk import router as ml_risk_router
 from app.routers.routes import router as routes_router
 from app.routers.analytics import router as analytics_router
+from app.routers.dashboard import router as dashboard_router
 
 from app.core.dependencies import get_current_user_id
 
@@ -87,6 +88,7 @@ app.include_router(destination_router)
 app.include_router(ml_risk_router)
 app.include_router(routes_router)
 app.include_router(analytics_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")

@@ -420,6 +420,7 @@
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.3px;
+  transition: all 0.3s ease;
 }
 
 .risk-level span,
@@ -431,6 +432,63 @@
 
   border-radius: 50%;
   background: #d3a328;
+  display: inline-block;
+}
+
+/* Dynamic Risk and Badge Levels */
+.risk-level.low,
+.safety-badge.low {
+  background: rgba(14, 126, 104, 0.16);
+  color: #39bfa4;
+}
+
+.risk-level.low span,
+.safety-badge.low span {
+  background: #2fb99d;
+  box-shadow: 0 0 6px #2fb99d;
+}
+
+.risk-level.medium,
+.safety-badge.medium {
+  background: rgba(217, 119, 6, 0.18);
+  color: #fbbf24;
+}
+
+.risk-level.medium span,
+.safety-badge.medium span {
+  background: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+}
+
+.risk-level.high,
+.safety-badge.high {
+  background: rgba(220, 38, 38, 0.18);
+  color: #f87171;
+}
+
+.risk-level.high span,
+.safety-badge.high span {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+.service-name-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.interactive-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(113, 100, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(113, 100, 255, 0.08);
 }
 
 
