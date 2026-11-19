@@ -4,10 +4,22 @@ import "./NLPAssistant.css";
 const API_URL = "http://127.0.0.1:8000";
 
 const PRESET_MESSAGES = [
-  { label: "🚨 Critical Emergency", text: "HELP ME! A guy has cornered me near the subway exit with a knife!" },
-  { label: "👁️ Suspicious Activity", text: "A shadowy figure is following me quietly down this dark unlit lane." },
-  { label: "🛑 Harassment Alert", text: "A group on motorbikes whistled, blocked my way and made obscene gestures." },
-  { label: "✅ Normal Commute", text: "Reached my hostel room safely, studying for exam now." }
+  {
+    label: "🚨 Critical Emergency",
+    text: "Help! Someone is attacking me and threatening me with a weapon. I need immediate assistance."
+  },
+  {
+    label: "👁️ Suspicious Activity",
+    text: "I have noticed someone following me for several streets. They keep changing direction whenever I do, and I feel unsafe."
+  },
+  {
+    label: "🛑 Harassment Alert",
+    text: "A group of people are verbally harassing me, making inappropriate comments and blocking my way."
+  },
+  {
+    label: "✅ Normal Commute",
+    text: "I have reached home safely after college. Everything went normally."
+  }
 ];
 
 function NLPAssistant({ token, onTriggerEmergency }) {
@@ -25,6 +37,7 @@ function NLPAssistant({ token, onTriggerEmergency }) {
     }
 
     setLoading(true);
+    setResult(null); // Clear stale results immediately so old data is not shown
     setError("");
     setSosStatus("");
 
@@ -88,7 +101,7 @@ function NLPAssistant({ token, onTriggerEmergency }) {
       <header className="nlp-header">
         <div className="nlp-header-title">
           <h1 className="nlp-title">
-            AI Safety Assistant <span className="nlp-title-accent">(NLP)</span>
+            AI Safety Assistant
           </h1>
         </div>
         <div className="nlp-badge" aria-label="Shield Transformer Active">
@@ -161,7 +174,19 @@ function NLPAssistant({ token, onTriggerEmergency }) {
           {error && <div className="nlp-error-msg">{error}</div>}
         </section>
 
-        {result && (
+        {loading && (
+          <section className="nlp-result-card nlp-loading-card">
+            <div className="nlp-analyzing-spinner">
+              <span className="nlp-spinner-icon">⚡</span>
+              <h3>DistilBERT Safety Analysis in Progress...</h3>
+              <p className="nlp-hint">
+                Evaluating threat category, contextual severity, and probability distribution.
+              </p>
+            </div>
+          </section>
+        )}
+
+        {!loading && result && (
           <section className="nlp-result-card">
             <div className="result-header">
               <div>

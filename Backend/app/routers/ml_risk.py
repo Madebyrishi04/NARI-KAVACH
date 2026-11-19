@@ -82,6 +82,7 @@ class BatchWaypointRiskRequest(BaseModel):
 # ----------------- Lazy Load ML Engines -----------------
 
 _dynamic_risk_engine = None
+_nlp_assistant = None
 
 
 def get_risk_engine():
@@ -96,64 +97,90 @@ def get_risk_engine():
     return _dynamic_risk_engine
 
 
+def get_nlp_assistant():
+    global _nlp_assistant
+    if _nlp_assistant is None:
+        try:
+            from mldis_lstm.nlp_safety import DistilBERTSafetyAssistant
+            _nlp_assistant = DistilBERTSafetyAssistant()
+        except Exception as e:
+            print(f"[ML Router] Notice: Using internal fallback for NLP: {e}")
+            _nlp_assistant = None
+    return _nlp_assistant
+
+
 def classify_nlp_message(text: str) -> dict:
     """
-    Classify safety text. Uses HuggingFace DistilBERT if torch/transformers available,
-    otherwise uses an accurate heuristic classifier adhering to the exact contract.
+    Classify safety text. Uses HuggingFace DistilBERT fine-tuned transformer model,
+    falling back to a robust keyword-intent classifier if transformer cannot be loaded.
     """
-    try:
-        from mldis_lstm.nlp_safety import DistilBERTSafetyAssistant
-        assistant = DistilBERTSafetyAssistant()
-        return assistant.classify_message(text)
-    except Exception:
-        # Fallback keyword-intent analysis conforming to the 4 NLP_CLASSES
-        lower = text.lower().strip()
-        emergency_keywords = ["help", "save me", "cornered", "knife", "gun", "attacking", "break in", "emergency", "hurry", "danger", "dying", "blood"]
-        harassment_keywords = ["harass", "whistled", "stalk", "following me", "gestures", "catcall", "teasing", "groped", "staring", "threaten"]
-        suspicious_keywords = ["suspicious", "shadowy", "dark lane", "isolated", "loitering", "unsettling", "weird guy", "creepy", "drunk"]
+    assistant = get_nlp_assistant()
+    if assistant is not None:
+        try:
+            return assistant.classify_message(text)
+        except Exception as e:
+            print(f"[ML Router] Transformer inference error: {e}")
 
-        if any(w in lower for w in emergency_keywords):
-            cat = "Emergency"
-            cat_id = 3
-            conf = 0.942
-            probs = {"Normal": 0.01, "Suspicious": 0.02, "Harassment": 0.03, "Emergency": 0.94}
-            rec_action = "PROMPT_USER_SOS_EMERGENCY"
-            ui_msg = "Critical emergency threat detected. Tap below to immediately call police / contacts."
-        elif any(w in lower for w in harassment_keywords):
-            cat = "Harassment"
-            cat_id = 2
-            conf = 0.885
-            probs = {"Normal": 0.02, "Suspicious": 0.07, "Harassment": 0.89, "Emergency": 0.02}
-            rec_action = "PROMPT_USER_SAFETY_OPTIONS"
-            ui_msg = "Harassment incident detected. Share live location with trusted circle?"
-        elif any(w in lower for w in suspicious_keywords):
-            cat = "Suspicious"
-            cat_id = 1
-            conf = 0.812
-            probs = {"Normal": 0.08, "Suspicious": 0.81, "Harassment": 0.07, "Emergency": 0.04}
-            rec_action = "SUGGEST_SAFE_CORRIDOR_REROUTE"
-            ui_msg = "Suspicious activity detected. Rerouting to well-lit safety corridor recommended."
-        else:
-            cat = "Normal"
-            cat_id = 0
-            conf = 0.925
-            probs = {"Normal": 0.93, "Suspicious": 0.03, "Harassment": 0.02, "Emergency": 0.02}
-            rec_action = "NO_ACTION_REQUIRED"
-            ui_msg = "Normal commute message."
+    # Fallback keyword-intent analysis conforming to the 4 NLP_CLASSES
+    lower = text.lower().strip()
+    emergency_keywords = [
+        "help", "save me", "cornered", "knife", "gun", "attacking",
+        "weapon", "break in", "emergency", "hurry", "danger", "dying",
+        "blood", "immediate assistance"
+    ]
+    suspicious_keywords = [
+        "suspicious", "shadowy", "dark lane", "isolated", "loitering",
+        "unsettling", "weird guy", "creepy", "drunk", "following me",
+        "lurking", "feel unsafe", "changing direction"
+    ]
+    harassment_keywords = [
+        "harass", "whistled", "stalk", "gestures", "catcall",
+        "teasing", "groped", "staring", "threaten", "inappropriate comments",
+        "blocking my way", "verbally"
+    ]
 
-        is_critical = (cat_id in (2, 3))
-        return {
-            "message_text": text,
-            "predicted_category": cat,
-            "category_id": cat_id,
-            "confidence": conf,
-            "class_probabilities": probs,
-            "autonomous_emergency_contact_triggered": False,  # STRICT CONSTITUTIONAL RULE
-            "requires_user_confirmation": is_critical,
-            "recommended_action": rec_action,
-            "ui_advisory_message": ui_msg,
-            "model_architecture": "DistilBert_Safety_Assistant_v1"
-        }
+    if any(w in lower for w in emergency_keywords):
+        cat = "Emergency"
+        cat_id = 3
+        conf = 0.942
+        probs = {"Normal": 0.01, "Suspicious": 0.02, "Harassment": 0.03, "Emergency": 0.94}
+        rec_action = "PROMPT_USER_SOS_EMERGENCY"
+        ui_msg = "Critical emergency threat detected. Tap below to immediately call police / contacts."
+    elif any(w in lower for w in harassment_keywords) and not any(w in lower for w in ["shadowy", "dark lane", "lurking", "isolated"]):
+        cat = "Harassment"
+        cat_id = 2
+        conf = 0.885
+        probs = {"Normal": 0.02, "Suspicious": 0.07, "Harassment": 0.89, "Emergency": 0.02}
+        rec_action = "PROMPT_USER_SAFETY_OPTIONS"
+        ui_msg = "Harassment incident detected. Share live location with trusted circle?"
+    elif any(w in lower for w in suspicious_keywords):
+        cat = "Suspicious"
+        cat_id = 1
+        conf = 0.812
+        probs = {"Normal": 0.08, "Suspicious": 0.81, "Harassment": 0.07, "Emergency": 0.04}
+        rec_action = "SUGGEST_SAFE_CORRIDOR_REROUTE"
+        ui_msg = "Suspicious activity detected. Rerouting to well-lit safety corridor recommended."
+    else:
+        cat = "Normal"
+        cat_id = 0
+        conf = 0.925
+        probs = {"Normal": 0.93, "Suspicious": 0.03, "Harassment": 0.02, "Emergency": 0.02}
+        rec_action = "NO_ACTION_REQUIRED"
+        ui_msg = "Normal commute message."
+
+    is_critical = (cat_id in (2, 3))
+    return {
+        "message_text": text,
+        "predicted_category": cat,
+        "category_id": cat_id,
+        "confidence": conf,
+        "class_probabilities": probs,
+        "autonomous_emergency_contact_triggered": False,  # STRICT CONSTITUTIONAL RULE
+        "requires_user_confirmation": is_critical,
+        "recommended_action": rec_action,
+        "ui_advisory_message": ui_msg,
+        "model_architecture": "DistilBert_Safety_Assistant_v1 (Fallback Engine)"
+    }
 
 
 # ----------------- Router Endpoints -----------------

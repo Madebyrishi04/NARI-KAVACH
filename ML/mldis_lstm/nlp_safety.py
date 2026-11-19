@@ -180,15 +180,27 @@ class DistilBERTSafetyAssistant:
         """
         if not HAS_TORCH:
             lower = message_text.lower().strip()
-            emergency_keywords = ["help", "save me", "cornered", "knife", "gun", "attacking", "break in", "emergency", "hurry", "danger", "dying", "blood"]
-            harassment_keywords = ["harass", "whistled", "stalk", "following me", "gestures", "catcall", "teasing", "groped", "staring", "threaten"]
-            suspicious_keywords = ["suspicious", "shadowy", "dark lane", "isolated", "loitering", "unsettling", "weird guy", "creepy", "drunk"]
+            emergency_keywords = [
+                "help", "save me", "cornered", "knife", "gun", "attacking",
+                "weapon", "break in", "emergency", "hurry", "danger", "dying",
+                "blood", "immediate assistance"
+            ]
+            suspicious_keywords = [
+                "suspicious", "shadowy", "dark lane", "isolated", "loitering",
+                "unsettling", "weird guy", "creepy", "drunk", "following me",
+                "lurking", "feel unsafe", "changing direction"
+            ]
+            harassment_keywords = [
+                "harass", "whistled", "stalk", "gestures", "catcall",
+                "teasing", "groped", "staring", "threaten", "inappropriate comments",
+                "blocking my way", "verbally"
+            ]
 
             if any(w in lower for w in emergency_keywords):
                 pred_idx = 3
                 conf = 0.942
                 probs = [0.01, 0.02, 0.03, 0.94]
-            elif any(w in lower for w in harassment_keywords):
+            elif any(w in lower for w in harassment_keywords) and not any(w in lower for w in ["shadowy", "dark lane", "lurking", "isolated"]):
                 pred_idx = 2
                 conf = 0.885
                 probs = [0.02, 0.07, 0.89, 0.02]

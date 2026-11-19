@@ -136,6 +136,38 @@
   border: 1px solid #f1f5f9;
 }
 
+.nlp-loading-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  text-align: center;
+}
+
+.nlp-analyzing-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.nlp-spinner-icon {
+  font-size: 34px;
+  animation: nlpPulse 1.2s infinite ease-in-out;
+  display: inline-block;
+}
+
+@keyframes nlpPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
 .nlp-input-card h3 {
   font-size: 17px;
   font-weight: 700;
