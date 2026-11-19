@@ -89,6 +89,13 @@ function createSeverityIcon(severity) {
   });
 }
 
+function formatIncidentType(type) {
+  if (!type) return "Safety Incident";
+  return String(type)
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 function HeatmapLayer({ points }) {
   const map = useMap();
 
@@ -759,7 +766,7 @@ function SafetyMapContent({ token }) {
                                     {sev.toUpperCase()} DENSITY
                                   </span>
                                   <span className="popup-type-tag">
-                                    {formatIncidentType(report.incident_type)}
+                                    {formatIncidentType(report.report_type || report.incident_type)}
                                   </span>
                                 </div>
                                 <p className="popup-desc">
