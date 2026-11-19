@@ -49,7 +49,7 @@ function Analytics({ token }) {
       <header className="analytics-header">
         <div>
           <h2>System Intelligence & Research Analytics</h2>
-          <p>Academic evaluation of ML models, Deep Learning LSTM forecasting, and DSA graph algorithms</p>
+          <p>This section is only for educational purposes and evaluation of the project.</p>
         </div>
         <div className="analytics-status-pill">
           <span className="dot online" /> Pipeline Online

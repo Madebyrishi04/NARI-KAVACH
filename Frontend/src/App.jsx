@@ -26,11 +26,31 @@ import NLPAssistant from "./NLPAssistant";
 import "./App.css";
 
 const API_URL = "http://127.0.0.1:8000";
+const IDLE_TIMEOUT_MS = 2 * 60 * 60 * 1000; // 2 hours
+
+function getInitialSessionToken() {
+  const storedToken = localStorage.getItem("access_token");
+  const lastActivity = localStorage.getItem("last_activity_time");
+
+  if (!storedToken) return null;
+
+  if (lastActivity) {
+    const elapsed = Date.now() - Number(lastActivity);
+    if (elapsed > IDLE_TIMEOUT_MS) {
+      // 2 hours have elapsed due to idleness -> clear session, direct to login
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("last_activity_time");
+      return null;
+    }
+  }
+
+  // Session still valid within 2-hour window -> refresh timestamp
+  localStorage.setItem("last_activity_time", String(Date.now()));
+  return storedToken;
+}
 
 function App() {
-  const [token, setToken] = useState(
-    localStorage.getItem("access_token")
-  );
+  const [token, setToken] = useState(getInitialSessionToken);
 
   const [activeScreen, setActiveScreen] = useState("Dashboard");
   const [userName, setUserName] = useState("");
@@ -41,11 +61,13 @@ function App() {
 
   const handleLogin = (accessToken) => {
     localStorage.setItem("access_token", accessToken);
+    localStorage.setItem("last_activity_time", String(Date.now()));
     setToken(accessToken);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("last_activity_time");
     setToken(null);
     setActiveScreen("Dashboard");
     setUserName("");
@@ -53,6 +75,38 @@ function App() {
     setRecentActivity([]);
     setDashboardData(null);
   };
+
+  // 2-hour Inactivity / Idleness listener and auto-logout
+  useEffect(() => {
+    if (!token) return;
+
+    const recordActivity = () => {
+      localStorage.setItem("last_activity_time", String(Date.now()));
+    };
+
+    const activityEvents = ["mousedown", "keydown", "scroll", "touchstart", "click"];
+    activityEvents.forEach((evt) => {
+      window.addEventListener(evt, recordActivity, { passive: true });
+    });
+
+    // Periodically verify if 2 hours have elapsed
+    const checkInterval = setInterval(() => {
+      const lastActivity = localStorage.getItem("last_activity_time");
+      if (lastActivity) {
+        const elapsed = Date.now() - Number(lastActivity);
+        if (elapsed > IDLE_TIMEOUT_MS) {
+          handleLogout();
+        }
+      }
+    }, 30000);
+
+    return () => {
+      activityEvents.forEach((evt) => {
+        window.removeEventListener(evt, recordActivity);
+      });
+      clearInterval(checkInterval);
+    };
+  }, [token]);
 
   // Handle password pages before showing the login page.
   const isResetPasswordPage =
@@ -227,40 +281,20 @@ function App() {
         <header className="preview-bar">
           <div className="preview-left">
             <span className="preview-icon">◧</span>
-            <span>
-              Walk with confidence. Live without fear. The world is
-              yours to explore.
+            <span className="header-quote">
+              Women hold up half the sky. —
+              <span className="quote-attribution"> Mao Zedong</span>
             </span>
           </div>
 
           <div className="preview-right">
             <button
               type="button"
-              className="preview-button"
-              onClick={() => setActiveScreen("Dashboard")}
-              title="Go to dashboard"
-            >
-              Landing
-            </button>
-
-            <button
-              type="button"
-              className="preview-button"
+              className="top-logout-btn"
               onClick={handleLogout}
-              title="Sign out and return to login"
+              title="Sign out of your account"
             >
-              Login
-            </button>
-
-            <button
-              type="button"
-              className={`preview-button ${
-                activeScreen === "Dashboard" ? "active" : ""
-              }`}
-              onClick={() => setActiveScreen("Dashboard")}
-              title="Open SafeRoute dashboard"
-            >
-              App
+              Logout
             </button>
           </div>
         </header>
@@ -271,23 +305,11 @@ function App() {
               <header className="dashboard-header">
                 <div>
                   <h1>
-                    {new Date().getHours() < 12
-                      ? "Good morning"
-                      : new Date().getHours() < 17
-                      ? "Good afternoon"
-                      : "Good evening"}
-                    {userName ? `, ${userName}` : ""}
+                    Welcome{userName ? `, ${userName}` : ""}
                   </h1>
 
                   <p>Here's your current safety status</p>
                 </div>
-
-                <button
-                  className="logout-btn"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
               </header>
 
               <section className="top-dashboard">
