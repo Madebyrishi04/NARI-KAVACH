@@ -63,13 +63,12 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding-top: 28px;
-  padding-bottom: 20px;
+  padding: 16px 8px 24px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -83,15 +82,16 @@
 }
 
 .sidebar-nav::-webkit-scrollbar-thumb {
-  background: #6366f1;
+  background: #252e42;
   border-radius: 10px;
 }
 
 .side-link {
   position: relative;
 
-  width: 100%;
-  min-height: 66px;
+  width: 72px;
+  min-height: 62px;
+  padding: 8px 4px;
 
   display: flex;
   flex-direction: column;
@@ -99,44 +99,104 @@
   justify-content: center;
   gap: 6px;
 
-  border: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
   background: transparent;
 
-  color: #68738a;
+  color: #7e8b9f;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+.side-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.side-icon {
+  display: block;
   transition: all 0.2s ease;
 }
 
-.side-link span {
-  font-size: 22px;
-  line-height: 1;
-}
-
 .side-link small {
-  font-size: 10px;
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.15;
   white-space: nowrap;
+  letter-spacing: 0.1px;
+  transition: color 0.2s ease;
 }
 
+/* Inactive Hover State */
 .side-link:hover {
-  color: #b8c1d8;
+  color: #d1d7e5;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.04);
 }
 
+.side-link:hover .side-icon-wrapper {
+  transform: translateY(-1px);
+}
+
+/* Active State */
 .side-link.active {
-  color: #7885ff;
+  color: #8b8bf5;
+  background: rgba(120, 133, 255, 0.09);
+  border-color: rgba(120, 133, 255, 0.18);
+  font-weight: 600;
+}
+
+.side-link.active small {
+  color: #a4afff;
 }
 
 .side-link.active::before {
   content: "";
 
   position: absolute;
-  left: 0;
-  top: 8px;
-  bottom: 8px;
+  left: -8px;
+  top: 14px;
+  bottom: 14px;
 
-  width: 2px;
+  width: 3px;
 
   background: #6573ff;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 8px rgba(101, 115, 255, 0.4);
+}
+
+/* Emergency Item Subtle Distinguishability */
+.side-link.emergency-link {
+  color: #a38289;
+}
+
+.side-link.emergency-link:hover {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.06);
+  border-color: rgba(239, 68, 68, 0.12);
+}
+
+.side-link.emergency-link:hover .side-icon {
+  color: #f87171;
+}
+
+.side-link.emergency-link.active {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.side-link.emergency-link.active small {
+  color: #fca5a5;
+}
+
+.side-link.emergency-link.active::before {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
 }
 
 

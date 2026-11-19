@@ -1,5 +1,16 @@
 
 import { useEffect, useState } from "react";
+import {
+  LayoutDashboard,
+  MapPinned,
+  Route,
+  Bot,
+  Siren,
+  UsersRound,
+  ChartNoAxesCombined,
+  CircleUserRound,
+  Shield,
+} from "lucide-react";
 
 import Login from "./Login";
 import ResetPassword from "./ResetPassword";
@@ -164,37 +175,51 @@ function App() {
   }
 
   const navigationItems = [
-    ["Dashboard", "⌂"],
-    ["Safety map", "⌖"],
-    ["Safe route", "⌁"],
-    ["AI Assistant", "⚡"],
-    ["Emergency", "🚨"],
-    ["Contacts", "👥"],
-    ["Analytics", "📊"],
-    ["Profile", "👤"],
+    { label: "Dashboard", Icon: LayoutDashboard },
+    { label: "Safety map", Icon: MapPinned },
+    { label: "Safe route", Icon: Route },
+    { label: "AI Assistant", Icon: Bot },
+    { label: "Emergency", Icon: Siren, isEmergency: true },
+    { label: "Contacts", Icon: UsersRound },
+    { label: "Analytics", Icon: ChartNoAxesCombined },
+    { label: "Profile", Icon: CircleUserRound },
   ];
 
   return (
     <div className="safety-app">
       <aside className="sidebar">
         <div className="brand">
-          <div className="brand-icon">♢</div>
+          <div className="brand-icon">
+            <Shield size={20} strokeWidth={2.2} />
+          </div>
         </div>
 
         <nav className="sidebar-nav">
-          {navigationItems.map(([label, icon]) => (
-            <button
-              key={label}
-              type="button"
-              className={`side-link ${
-                activeScreen === label ? "active" : ""
-              }`}
-              onClick={() => setActiveScreen(label)}
-            >
-              <span>{icon}</span>
-              <small>{label}</small>
-            </button>
-          ))}
+          {navigationItems.map(({ label, Icon, isEmergency }) => {
+            const isActive = activeScreen === label;
+            return (
+              <button
+                key={label}
+                type="button"
+                className={`side-link ${isActive ? "active" : ""} ${
+                  isEmergency ? "emergency-link" : ""
+                }`}
+                onClick={() => setActiveScreen(label)}
+                title={label}
+                aria-label={label}
+              >
+                <span className="side-icon-wrapper">
+                  <Icon
+                    size={22}
+                    strokeWidth={1.9}
+                    className="side-icon"
+                    aria-hidden="true"
+                  />
+                </span>
+                <small>{label}</small>
+              </button>
+            );
+          })}
         </nav>
       </aside>
 
