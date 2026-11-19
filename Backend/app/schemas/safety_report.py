@@ -1,3 +1,5 @@
+from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -37,6 +39,8 @@ class SafetyReportResponse(BaseModel):
     severity: str
     latitude: float
     longitude: float
+    created_at: Optional[datetime] = None
+    distance_meters: Optional[float] = None
 
     model_config = ConfigDict(
         from_attributes=True
