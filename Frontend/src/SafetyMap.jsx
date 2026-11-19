@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { Component, useCallback, useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -9,8 +9,58 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "leaflet.heat";
+import { HeatLayer } from "leaflet.heat";
 import "./SafetyMap.css";
+
+// Ensure global Leaflet instance is available if any plugin expects window.L
+if (typeof window !== "undefined") {
+  window.L = L;
+}
+
+class MapErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("SafetyMap runtime error caught:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: "40px 20px", textAlign: "center", color: "#f87171" }}>
+          <h2>Map Layer Loading Issue</h2>
+          <p style={{ color: "#a1abc0", marginTop: 8 }}>
+            {this.state.error?.message || "An unexpected error occurred while rendering the map view."}
+          </p>
+          <button
+            type="button"
+            onClick={() => this.setState({ hasError: false, error: null })}
+            style={{
+              marginTop: 16,
+              padding: "10px 20px",
+              borderRadius: 8,
+              background: "#6366f1",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: 600,
+            }}
+          >
+            Reset Map View
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const markerColors = {
   low: "#22c55e",
@@ -45,23 +95,46 @@ function HeatmapLayer({ points }) {
   useEffect(() => {
     if (!map || !points || points.length === 0) return;
 
-    const heat = L.heatLayer(points, {
-      radius: 28,
-      blur: 20,
-      maxZoom: 17,
-      max: 1.0,
-      minOpacity: 0.35,
-      gradient: {
-        0.2: "#3b82f6",
-        0.4: "#06b6d4",
-        0.6: "#10b981",
-        0.8: "#f59e0b",
-        1.0: "#ef4444",
-      },
-    }).addTo(map);
+    let heat = null;
+    try {
+      if (typeof HeatLayer === "function") {
+        heat = new HeatLayer(points, {
+          radius: 28,
+          blur: 20,
+          maxZoom: 17,
+          max: 1.0,
+          minOpacity: 0.35,
+          gradient: {
+            0.2: "#3b82f6",
+            0.4: "#06b6d4",
+            0.6: "#10b981",
+            0.8: "#f59e0b",
+            1.0: "#ef4444",
+          },
+        });
+        heat.addTo(map);
+      } else if (typeof L !== "undefined" && typeof L.heatLayer === "function") {
+        heat = L.heatLayer(points, {
+          radius: 28,
+          blur: 20,
+          maxZoom: 17,
+          max: 1.0,
+          minOpacity: 0.35,
+        });
+        heat.addTo(map);
+      }
+    } catch (err) {
+      console.warn("Heatmap canvas layer initialization:", err);
+    }
 
     return () => {
-      map.removeLayer(heat);
+      if (heat && map) {
+        try {
+          map.removeLayer(heat);
+        } catch (e) {
+          // ignore layer removal errors
+        }
+      }
     };
   }, [map, points]);
 
@@ -102,7 +175,7 @@ function getRiskCategoryTheme(cat) {
   };
 }
 
-function SafetyMap({ token }) {
+function SafetyMapContent({ token }) {
   // Mode switcher: "incidents" | "heatmap" | "risk_zones"
   const [viewMode, setViewMode] = useState("incidents");
 
@@ -648,7 +721,63 @@ function SafetyMap({ token }) {
 
                 {/* MODE 2: Crime Heatmap View */}
                 {viewMode === "heatmap" && (
-                  <HeatmapLayer points={heatmapPoints} />
+                  <>
+                    <HeatmapLayer points={heatmapPoints} />
+                    {reports
+                      .filter(
+                        (r) =>
+                          Number.isFinite(Number(r.latitude)) &&
+                          Number.isFinite(Number(r.longitude))
+                      )
+                      .map((report) => {
+                        const sev = String(report.severity || "medium").toLowerCase();
+                        const heatColor =
+                          sev === "critical"
+                            ? "#ef4444"
+                            : sev === "high"
+                            ? "#f97316"
+                            : sev === "medium"
+                            ? "#eab308"
+                            : "#3b82f6";
+
+                        return (
+                          <Circle
+                            key={`heatmap-halo-${report.id}`}
+                            center={[Number(report.latitude), Number(report.longitude)]}
+                            radius={sev === "critical" ? 240 : sev === "high" ? 190 : 140}
+                            pathOptions={{
+                              color: heatColor,
+                              fillColor: heatColor,
+                              fillOpacity: 0.25,
+                              weight: 2,
+                            }}
+                          >
+                            <Popup className="incident-popup">
+                              <div className="incident-popup-card">
+                                <div className="incident-popup-header">
+                                  <span className={`popup-severity-tag tag-${sev}`}>
+                                    {sev.toUpperCase()} DENSITY
+                                  </span>
+                                  <span className="popup-type-tag">
+                                    {formatIncidentType(report.incident_type)}
+                                  </span>
+                                </div>
+                                <p className="popup-desc">
+                                  {report.description ||
+                                    "Crowdsourced safety hazard concentration in this vicinity."}
+                                </p>
+                                <div className="popup-footer">
+                                  <span className="popup-coords">
+                                    📍 {Number(report.latitude).toFixed(4)},{" "}
+                                    {Number(report.longitude).toFixed(4)}
+                                  </span>
+                                </div>
+                              </div>
+                            </Popup>
+                          </Circle>
+                        );
+                      })}
+                  </>
                 )}
 
                 {/* MODE 3: ML Risk Zones View */}
@@ -1071,6 +1200,14 @@ function SafetyMap({ token }) {
         </div>
       )}
     </div>
+  );
+}
+
+function SafetyMap(props) {
+  return (
+    <MapErrorBoundary>
+      <SafetyMapContent {...props} />
+    </MapErrorBoundary>
   );
 }
 
