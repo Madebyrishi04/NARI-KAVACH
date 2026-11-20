@@ -18,15 +18,23 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
-# Ensure project root, backend, and ML are in sys.path
+# Ensure project root, backend, and route_engine are in sys.path
 _CURRENT_FILE = Path(__file__).resolve()
 _ROUTERS_DIR = _CURRENT_FILE.parent
 _APP_DIR = _ROUTERS_DIR.parent
 _BACKEND_DIR = _APP_DIR.parent
 _PROJECT_ROOT = _BACKEND_DIR.parent
 _ML_DIR = _PROJECT_ROOT / "ML"
+_ROUTE_ENGINE_DIR = _PROJECT_ROOT / "route_engine"
+_BACKEND_ROUTE_ENGINE = _BACKEND_DIR / "route_engine"
 
-for _p in [str(_BACKEND_DIR), str(_PROJECT_ROOT), str(_ML_DIR)]:
+for _p in [
+    str(_BACKEND_DIR),
+    str(_PROJECT_ROOT),
+    str(_ML_DIR),
+    str(_ROUTE_ENGINE_DIR),
+    str(_BACKEND_ROUTE_ENGINE),
+]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 

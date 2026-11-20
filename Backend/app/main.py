@@ -7,8 +7,15 @@ _BACKEND_DIR = _CURRENT_FILE.parents[1]
 _PROJECT_ROOT = _CURRENT_FILE.parents[2]
 _ML_DIR = _PROJECT_ROOT / "ML"
 _ROUTE_ENGINE_DIR = _PROJECT_ROOT / "route_engine"
+_BACKEND_ROUTE_ENGINE = _BACKEND_DIR / "route_engine"
 
-for _p in [str(_BACKEND_DIR), str(_PROJECT_ROOT), str(_ML_DIR), str(_ROUTE_ENGINE_DIR)]:
+for _p in [
+    str(_BACKEND_DIR),
+    str(_PROJECT_ROOT),
+    str(_ML_DIR),
+    str(_ROUTE_ENGINE_DIR),
+    str(_BACKEND_ROUTE_ENGINE),
+]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 

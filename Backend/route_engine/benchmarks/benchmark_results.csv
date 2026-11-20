@@ -1,0 +1,7 @@
+grid_size,nodes,algorithm,execution_time_ms,distance_m,explored_nodes,repetitions
+10x10,100,Dijkstra,0.0817,1939.3199,100,7
+10x10,100,A*,0.162,1939.3199,91,7
+25x25,625,Dijkstra,0.7672,5171.2771,625,7
+25x25,625,A*,1.2151,5171.2771,601,7
+50x50,2500,Dijkstra,2.8542,10557.198,2500,7
+50x50,2500,A*,5.4553,10557.198,2451,7
