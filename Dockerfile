@@ -12,8 +12,10 @@ RUN pip install --no-cache-dir -r ./Backend/requirements.txt
 
 COPY Backend ./Backend
 COPY ML ./ML
+COPY route_engine ./route_engine
+COPY cache ./cache
 
-ENV PYTHONPATH="/app:/app/Backend:/app/ML"
+ENV PYTHONPATH="/app:/app/Backend:/app/ML:/app/route_engine"
 ENV PORT=8000
 
 WORKDIR /app/Backend

@@ -1,13 +1,14 @@
 import sys
 from pathlib import Path
 
-# Ensure Backend, Project Root, and ML are always in sys.path
+# Ensure Backend, Project Root, ML, and route_engine are always in sys.path
 _CURRENT_FILE = Path(__file__).resolve()
 _BACKEND_DIR = _CURRENT_FILE.parents[1]
 _PROJECT_ROOT = _CURRENT_FILE.parents[2]
 _ML_DIR = _PROJECT_ROOT / "ML"
+_ROUTE_ENGINE_DIR = _PROJECT_ROOT / "route_engine"
 
-for _p in [str(_BACKEND_DIR), str(_PROJECT_ROOT), str(_ML_DIR)]:
+for _p in [str(_BACKEND_DIR), str(_PROJECT_ROOT), str(_ML_DIR), str(_ROUTE_ENGINE_DIR)]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
