@@ -17,7 +17,7 @@ else:
     load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-USE_SQLITE = os.getenv("USE_SQLITE", "false").lower() in ("true", "1")
+USE_SQLITE = os.getenv("USE_SQLITE", "true" if not DATABASE_URL else "false").lower() in ("true", "1") or not DATABASE_URL
 APP_ENV = os.getenv("APP_ENV", "development").lower()
 
 # Canonical absolute path for local SQLite database
