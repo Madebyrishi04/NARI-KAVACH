@@ -13,7 +13,7 @@
 
 ## 📖 Executive Summary
 
-**NARI-KAVACH** (also engineered under the **NariShield AI** framework) is a comprehensive, life-critical women's safety ecosystem designed to eliminate unsafe commutes, accelerate emergency responses, and provide transparent, data-driven security intelligence. 
+**NARI-KAVACH** is a comprehensive, life-critical women's safety ecosystem designed to eliminate unsafe commutes, accelerate emergency responses, and provide transparent, data-driven security intelligence. 
 
 Traditional navigation platforms optimize strictly for shortest travel time or minimal distance, often routing pedestrians through isolated, unlit, or historically hazardous corridors. NARI-KAVACH bridges this critical gap by fusing:
 1. **Dynamic Spatio-Temporal Risk Prediction** powered by machine learning (XGBoost, Random Forest).
