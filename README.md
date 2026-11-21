@@ -330,7 +330,7 @@ Developed as part of the **Final Year Major Project (7th Semester)** by:
 
 | Name | Roll Number | Primary Domain & Architecture Thread |
 | :--- | :---: | :--- |
-| **Snehangshu Sarkar** | **23052600** | **Project Lead • DSA & Routing Engine • Fullstack & Cloud Deployment** |
+| **Snehangshu Sarkar** | **23052600** | **Project Lead • DSA & Routing Engine • Fullstack & Local Deployment** |
 | **Anushka Anand** | **23052225** | **Backend Architecture • Database Modeling & Security Protocols** |
 | **Aditya Mukherjee** | **23051156** | **Machine Learning • Deep Learning (LSTM) & Explainable AI (SHAP)** |
 | **Shristi Jha** | **23052755** | **Frontend Engineering • Geospatial UI, Mapping & Safety Journey Experience** |
