@@ -1,4 +1,4 @@
-# 🛡️ NARI-KAVACH (NariShield AI)
+# 🛡️ NARI-KAVACH
 ### *AI-Driven Women's Safety, Intelligent Route Risk Prediction & Emergency Response Ecosystem*
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
